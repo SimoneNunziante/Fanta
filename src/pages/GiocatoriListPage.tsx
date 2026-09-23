@@ -77,11 +77,18 @@ const ETICHETTE_ORDINAMENTO: Record<CampoOrdinamento, string> = {
   fantaValoreMedio: "FVM",
 };
 
+type FiltroPresi = "TUTTI" | "MIO" | "ALTRI";
+
 interface Props {
-  soloPreferiti?: boolean;
+  vista: "listone" | "preferiti" | "presi";
 }
 
-export function GiocatoriListPage({ soloPreferiti = false }: Props) {
+/** Secondi in cui resta visibile il pulsante "Annulla" dopo un'azione sull'asta. */
+const DURATA_ANNULLA_MS = 6000;
+
+export function GiocatoriListPage({ vista }: Props) {
+  const soloPreferiti = vista === "preferiti";
+  const soloPresi = vista === "presi";
   const [modalita, setModalita] = useState<Modalita>("CLASSICO");
   const [base, setBase] = useState<Base>("MILLE");
   const [ruoli, setRuoli] = useState<string[]>([]);
@@ -90,6 +97,11 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
   const [dettaglioId, setDettaglioId] = useState<number | null>(null);
   const [astaAperta, setAstaAperta] = useState(false);
   const [mostraPresi, setMostraPresi] = useState(false);
+  const [filtroPresi, setFiltroPresi] = useState<FiltroPresi>("TUTTI");
+  const [annulla, setAnnulla] = useState<{ giocatoreId: number; testo: string; precedente: Acquisto | null } | null>(
+    null,
+  );
+  const timerAnnullaRef = useRef<number | undefined>(undefined);
   const [completi, setCompleti] = useState<Map<number, GiocatoreRaw>>(new Map());
   const [acquisti, setAcquisti] = useState<Record<string, Acquisto>>({});
   const [configAsta, setConfigAsta] = useState<ConfigAsta>(CONFIG_ASTA_DEFAULT);
@@ -203,6 +215,30 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
     }
   }, []);
 
+  /** Azioni dalla scheda dettaglio: salvano e offrono per qualche secondo "Annulla". */
+  function handleAcquistoConAnnulla(giocatoreId: number, acquisto: Acquisto | null) {
+    const nome = completi.get(giocatoreId)?.nome ?? "Giocatore";
+    const testo =
+      acquisto == null
+        ? `${nome} di nuovo libero`
+        : acquisto.stato === "MIO"
+          ? `${nome} tuo a ${acquisto.prezzo}`
+          : `${nome} preso da altri`;
+    setAnnulla({ giocatoreId, testo, precedente: acquisti[giocatoreId] ?? null });
+    window.clearTimeout(timerAnnullaRef.current);
+    timerAnnullaRef.current = window.setTimeout(() => setAnnulla(null), DURATA_ANNULLA_MS);
+    handleSalvaAcquisto(giocatoreId, acquisto);
+  }
+
+  function handleAnnulla() {
+    if (!annulla) return;
+    window.clearTimeout(timerAnnullaRef.current);
+    handleSalvaAcquisto(annulla.giocatoreId, annulla.precedente);
+    setAnnulla(null);
+  }
+
+  useEffect(() => () => window.clearTimeout(timerAnnullaRef.current), []);
+
   async function handleSalvaConfig(config: ConfigAsta) {
     setConfigAsta(config);
     await aggiornaConfigAsta(config);
@@ -251,7 +287,12 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
 
   const giocatoriFiltrati = useMemo(() => {
     let risultato = soloPreferiti ? giocatori.filter((g) => preferiti.has(g.id)) : giocatori;
-    if (!mostraPresi) {
+    if (soloPresi) {
+      risultato = risultato.filter((g) => {
+        const a = acquisti[g.id];
+        return a != null && (filtroPresi === "TUTTI" || a.stato === filtroPresi);
+      });
+    } else if (!mostraPresi) {
       risultato = risultato.filter((g) => !acquisti[g.id]);
     }
     if (ruoli.length > 0) {
@@ -266,7 +307,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
       risultato = esatti.length > 0 ? esatti : risultato.filter((g) => corrispondeApprossimato(g, query));
     }
     return risultato;
-  }, [giocatori, soloPreferiti, preferiti, ruoli, squadra, ricerca, mostraPresi, acquisti]);
+  }, [giocatori, soloPreferiti, soloPresi, filtroPresi, preferiti, ruoli, squadra, ricerca, mostraPresi, acquisti]);
 
   const giocatoriOrdinati = useMemo(() => {
     const ordinati = [...giocatoriFiltrati].sort((a, b) => confronta(a, b, sortCampo));
@@ -279,7 +320,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
   useEffect(() => {
     setVisibili(BLOCCO_CARD);
     window.scrollTo({ top: 0 });
-  }, [modalita, base, ruoli, squadra, ricerca, soloPreferiti, sortCampo, direzione, mostraPresi]);
+  }, [modalita, base, ruoli, squadra, ricerca, vista, sortCampo, direzione, mostraPresi, filtroPresi]);
 
   useEffect(() => {
     Promise.all([fetchGiocatoriCompleti(), fetchDatiAsta()])
@@ -327,6 +368,14 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
     };
   }, [modalita, base]);
 
+  const totalePresi = Object.values(acquisti).reduce(
+    (acc, a) => ({
+      tutti: acc.tutti + 1,
+      miei: acc.miei + (a.stato === "MIO" ? 1 : 0),
+      altri: acc.altri + (a.stato === "ALTRI" ? 1 : 0),
+    }),
+    { tutti: 0, miei: 0, altri: 0 },
+  );
   const filtriAttivi = ruoli.length + (squadra ? 1 : 0) + (mostraPresi ? 1 : 0);
   const giocatoreDettaglio = dettaglioId != null ? completi.get(dettaglioId) : undefined;
   const statoDettaglio = dettaglioId != null ? giocatori.find((g) => g.id === dettaglioId) : undefined;
@@ -339,7 +388,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
   ].filter(Boolean);
 
   return (
-    <div className="app">
+    <div className={`app vista-${vista}`}>
       <header className="topbar">
         <div className="topbar-riga">
           <div className="ricerca">
@@ -353,7 +402,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
                 if (e.key === "Enter" && giocatoriOrdinati.length > 0) handleApriDettaglio(giocatoriOrdinati[0].id);
               }}
               enterKeyHint="go"
-              autoFocus={!soloPreferiti}
+              autoFocus={vista === "listone"}
               ref={ricercaRef}
             />
             {ricerca && (
@@ -400,6 +449,26 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
       </header>
 
       <main className="lista-contenitore">
+        {soloPresi && (
+          <div className="toggle-group filtri-larga filtro-presi" role="group" aria-label="Quali giocatori presi">
+            {(
+              [
+                ["TUTTI", `Tutti (${totalePresi.tutti})`],
+                ["MIO", `Miei (${totalePresi.miei})`],
+                ["ALTRI", `Altri (${totalePresi.altri})`],
+              ] as [FiltroPresi, string][]
+            ).map(([valore, label]) => (
+              <button
+                key={valore}
+                type="button"
+                className={filtroPresi === valore ? "toggle active" : "toggle"}
+                onClick={() => setFiltroPresi(valore)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
         {errore && <p className="errore">{errore}</p>}
         {caricamento && giocatori.length === 0 ? (
           <p className="vuoto">Caricamento…</p>
@@ -407,7 +476,9 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
           <p className="vuoto">
             {soloPreferiti && preferiti.size === 0
               ? "Nessun preferito ancora: tocca ☆ su un giocatore del listone."
-              : "Nessun giocatore trovato con questi filtri."}
+              : soloPresi && totalePresi.tutti === 0
+                ? "Nessun giocatore preso ancora: segnalo dalla sua scheda con ✓ Mio o Preso da altri."
+                : "Nessun giocatore trovato con questi filtri."}
           </p>
         ) : (
           <ul className="lista">
@@ -441,10 +512,27 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
           Listone
         </NavLink>
         <NavLink to="/preferiti" className="tab">
-          <span className="tab-icona">★</span>
-          Preferiti ({preferiti.size})
+          <span className="tab-icona">
+            ★<span className="tab-conta">{preferiti.size}</span>
+          </span>
+          Preferiti
+        </NavLink>
+        <NavLink to="/presi" className="tab">
+          <span className="tab-icona">
+            ✓<span className="tab-conta">{totalePresi.tutti}</span>
+          </span>
+          Presi
         </NavLink>
       </nav>
+
+      {annulla && (
+        <div className="toast" role="status">
+          <span className="toast-testo">{annulla.testo}</span>
+          <button type="button" className="toast-btn" onClick={handleAnnulla}>
+            Annulla
+          </button>
+        </div>
+      )}
 
       {filtriAperti && (
         <FiltriSheet
@@ -487,7 +575,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
           onTogglePreferito={handleTogglePreferito}
           onSalvaSpesaMassima={handleSalvaSpesaMassima}
           onSalvaPriorita={handleSalvaPriorita}
-          onSalvaAcquisto={handleSalvaAcquisto}
+          onSalvaAcquisto={handleAcquistoConAnnulla}
           onApriFormazione={setFormazioneSquadra}
           onClose={handleChiudiDettaglio}
         />

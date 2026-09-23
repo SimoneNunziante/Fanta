@@ -1142,3 +1142,87 @@ button {
   color: var(--text-2);
   font-size: 22px;
 }
+
+
+/* ---------- Vista "Presi" e annulla ---------- */
+.vista-presi .card[data-acquisto] {
+  opacity: 1;
+}
+
+.filtro-presi {
+  margin-bottom: 14px;
+}
+
+.filtro-presi .toggle {
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 23px;
+  white-space: nowrap;
+}
+
+.filtri-larga .toggle {
+  min-width: 0;
+}
+
+.tab-icona {
+  position: relative;
+}
+
+.tab-conta {
+  position: absolute;
+  top: -10px;
+  left: 70%;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 15px;
+  background-color: var(--primary);
+  color: var(--primary-text);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: center;
+}
+
+.toast {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 14px);
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 14px 20px;
+  border-radius: 20px;
+  background-color: #2b2f36;
+  color: #ffffff;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  animation: sali-poco 0.18s ease-out;
+}
+
+.toast-testo {
+  flex: 1;
+  min-width: 0;
+  font-size: 24px;
+  overflow-wrap: anywhere;
+}
+
+.toast-btn {
+  flex: none;
+  height: 64px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 14px;
+  background-color: var(--primary);
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+@keyframes sali-poco {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}

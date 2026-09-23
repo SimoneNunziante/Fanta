@@ -8,8 +8,9 @@ function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<GiocatoriListPage />} />
-        <Route path="/preferiti" element={<GiocatoriListPage soloPreferiti />} />
+        <Route path="/" element={<GiocatoriListPage vista="listone" />} />
+        <Route path="/preferiti" element={<GiocatoriListPage vista="preferiti" />} />
+        <Route path="/presi" element={<GiocatoriListPage vista="presi" />} />
       </Routes>
     </HashRouter>
   );
