@@ -1,4 +1,4 @@
-# FantaMantra PWA
+# Fanta (PWA)
 
 ## Stack
 React 19 + TypeScript + Vite 7, react-router (HashRouter). Nessun backend. Package manager: npm (c'è `package-lock.json`, usato dalla CI).
@@ -20,6 +20,10 @@ Naming in italiano, come nel progetto originale. I path pubblici passano da `imp
 
 ## Hook post-edit
 `npx tsc --noEmit` (poi `npm run build` prima del push)
+
+- Icone: `python3 scripts/genera-icone.py` rigenera `public/icons/*`.
+- Zoom: bloccato nelle liste (`touch-action: pan-x pan-y` + `user-scalable=no`), gestito in JS solo in `FormazioneModal`.
+- La chiave di `localStorage` resta `fantamantra.datiUtente.v1` anche dopo il cambio nome: non rinominarla o si perdono i dati.
 
 ## File generati
 `dist/` (ignorato da git).

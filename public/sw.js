@@ -1,6 +1,6 @@
 // Service worker minimale: stale-while-revalidate su tutte le risorse dello stesso dominio,
 // cosi' l'app funziona anche offline dopo la prima apertura e si aggiorna in background.
-const CACHE = "fantamantra-v1";
+const CACHE = "fanta-v2";
 
 self.addEventListener("install", () => self.skipWaiting());
 

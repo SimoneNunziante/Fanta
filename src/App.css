@@ -54,14 +54,17 @@ body {
   color: var(--text);
 }
 
-/* Niente zoom col doppio tocco (resta il pinch con due dita), e niente ritardo sui tocchi. */
+/*
+ * Niente zoom (doppio tocco e pinch) nelle liste: si puo' solo scorrere.
+ * Lo zoom resta nella formazione, che lo gestisce da se' (.modal-image-wrapper ha touch-action: none).
+ */
 html,
 body,
 button,
 input,
 select,
 a {
-  touch-action: manipulation;
+  touch-action: pan-x pan-y;
 }
 
 body.scroll-bloccato {

@@ -1,4 +1,4 @@
-# FantaMantra PWA
+# Fanta (PWA)
 
 Listone giocatori per l'asta del fantacalcio (Classico e Mantra), come web app installabile.
 Nessun backend: i giocatori sono in `public/data/giocatori.json`, mentre preferiti, spesa massima
