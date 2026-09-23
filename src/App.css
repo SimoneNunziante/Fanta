@@ -182,7 +182,7 @@ button {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .sentinella {
@@ -206,10 +206,10 @@ button {
 
 /* ---------- Card giocatore ---------- */
 .card {
-  padding: 10px 12px;
+  padding: 16px 16px 14px;
   border: 1px solid var(--border);
-  border-left-width: 4px;
-  border-radius: 12px;
+  border-left-width: 6px;
+  border-radius: 16px;
   background-color: var(--surface);
   box-shadow: var(--shadow);
 }
@@ -227,7 +227,7 @@ button {
 .card-riga {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .card-nome {
@@ -238,7 +238,7 @@ button {
 }
 
 .nome-giocatore {
-  font-size: 17px;
+  font-size: 21px;
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -246,19 +246,20 @@ button {
 }
 
 .card-squadra {
-  font-size: 13px;
+  margin-top: 2px;
+  font-size: 15px;
   color: var(--text-2);
 }
 
 .stella {
   flex: none;
-  width: 44px;
-  height: 44px;
-  margin: -6px -8px -6px 0;
+  width: 52px;
+  height: 52px;
+  margin: -8px -10px -8px 0;
   border: none;
   border-radius: 50%;
   background: none;
-  font-size: 26px;
+  font-size: 32px;
   line-height: 1;
   color: var(--text-2);
 }
@@ -273,21 +274,21 @@ button {
 
 .card-valori {
   display: flex;
-  gap: 16px;
-  margin-top: 4px;
+  gap: 24px;
+  margin-top: 10px;
   font-variant-numeric: tabular-nums;
 }
 
 .card-valori small,
 .card-spesa small {
   color: var(--text-2);
-  font-size: 12px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
 .card-valori strong {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .card-asta {
@@ -295,8 +296,8 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 10px;
-  padding-top: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
   border-top: 1px solid var(--border);
 }
 
@@ -307,13 +308,13 @@ button {
 }
 
 .spesa-massima-input {
-  width: 64px;
-  height: 40px;
+  width: 76px;
+  height: 48px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: var(--surface-2);
   text-align: center;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   outline: none;
@@ -329,8 +330,8 @@ button {
 }
 
 .priorita-dot {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -341,8 +342,8 @@ button {
 
 .priorita-dot::after {
   content: "";
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: 3px solid var(--c);
   opacity: 0.45;
@@ -373,10 +374,10 @@ button {
 }
 
 .ruolo-badge {
-  min-width: 26px;
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-size: 13px;
+  min-width: 32px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 15px;
   font-weight: 700;
   text-align: center;
   color: #ffffff;
