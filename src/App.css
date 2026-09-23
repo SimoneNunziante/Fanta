@@ -158,14 +158,16 @@ button {
 .riepilogo {
   display: block;
   width: 100%;
-  margin-top: 13px;
+  margin-top: 10px;
   padding: 2px;
   border: none;
   background: none;
   color: var(--text-2);
-  font-size: 29px;
+  font-size: 23px;
   text-align: left;
-  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .riepilogo strong {
@@ -799,31 +801,46 @@ button {
 
 /* ---------- Stato asta (barra in alto) ---------- */
 .stato-asta {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 6px 16px;
+  gap: 18px;
   width: 100%;
   margin-top: 10px;
-  padding: 10px 14px;
+  padding: 12px 18px;
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 20px;
   background-color: var(--surface);
-  font-size: 26px;
+  font-size: 32px;
   text-align: left;
+}
+
+.stato-soldi {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.stato-soldi strong {
+  font-size: 36px;
 }
 
 .stato-soldi small {
   color: var(--text-2);
+  font-size: 26px;
 }
 
 .stato-slot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  justify-content: end;
+  gap: 4px 20px;
   color: var(--text-2);
-  font-size: 24px;
+  font-size: 29px;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .slot.completo {
@@ -1154,10 +1171,78 @@ button {
 }
 
 .filtro-presi .toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-width: 0;
-  padding: 0 6px;
-  font-size: 23px;
-  white-space: nowrap;
+  min-height: 96px;
+  padding: 6px;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.filtro-presi .toggle small {
+  font-size: 24px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.libera-btn {
+  flex: none;
+  width: 70px;
+  height: 70px;
+  margin: -10px -8px 0 0;
+  border: 2px solid var(--danger);
+  border-radius: 50%;
+  background: none;
+  color: var(--danger);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.libera-btn:active {
+  background-color: color-mix(in srgb, var(--danger) 15%, transparent);
+}
+
+.conferma-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.55);
+  animation: dissolvenza 0.12s ease-out;
+}
+
+.conferma {
+  width: 100%;
+  max-width: 560px;
+  padding: 26px 22px 22px;
+  border-radius: 24px;
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+.conferma p {
+  margin: 0 0 22px;
+  font-size: 30px;
+  line-height: 1.3;
+}
+
+.conferma-azioni {
+  display: flex;
+  gap: 12px;
+}
+
+.conferma-azioni .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 84px;
+  font-size: 28px;
 }
 
 .filtri-larga .toggle {

@@ -9,6 +9,8 @@ interface Props {
   acquisto: Acquisto | null;
   mostraDatiAsta: boolean;
   onApri: (giocatoreId: number) => void;
+  /** Se presente (vista "Presi"), al posto della stella compare la ✕ per rimettere libero il giocatore. */
+  onLibera?: (giocatoreId: number) => void;
   onTogglePreferito: (giocatoreId: number, preferito: boolean) => void;
   onSalvaSpesaMassima: (giocatoreId: number, valore: number | null) => void;
   onSalvaPriorita: (giocatoreId: number, valore: Priorita | null) => void;
@@ -26,6 +28,7 @@ export const GiocatoreCard = memo(function GiocatoreCard({
   acquisto,
   mostraDatiAsta,
   onApri,
+  onLibera,
   onTogglePreferito,
   onSalvaSpesaMassima,
   onSalvaPriorita,
@@ -55,6 +58,16 @@ export const GiocatoreCard = memo(function GiocatoreCard({
             )}
           </div>
         </button>
+        {onLibera ? (
+          <button
+            type="button"
+            className="libera-btn"
+            aria-label={`Rimetti libero ${g.nome}`}
+            onClick={() => onLibera(g.id)}
+          >
+            ✕
+          </button>
+        ) : (
         <button
           type="button"
           className={preferito ? "stella attiva" : "stella"}
@@ -64,6 +77,7 @@ export const GiocatoreCard = memo(function GiocatoreCard({
         >
           {preferito ? "★" : "☆"}
         </button>
+        )}
       </div>
 
       <div className="card-valori" onClick={() => onApri(g.id)}>

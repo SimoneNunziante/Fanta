@@ -102,6 +102,7 @@ export function GiocatoriListPage({ vista }: Props) {
     null,
   );
   const timerAnnullaRef = useRef<number | undefined>(undefined);
+  const [daLiberare, setDaLiberare] = useState<number | null>(null);
   const [completi, setCompleti] = useState<Map<number, GiocatoreRaw>>(new Map());
   const [acquisti, setAcquisti] = useState<Record<string, Acquisto>>({});
   const [configAsta, setConfigAsta] = useState<ConfigAsta>(CONFIG_ASTA_DEFAULT);
@@ -430,13 +431,17 @@ export function GiocatoriListPage({ vista }: Props) {
           </button>
         </div>
         <button type="button" className="riepilogo" onClick={() => setFiltriAperti(true)}>
-          {riepilogo.join(" · ")} — <strong>{giocatoriOrdinati.length}</strong>
+          <strong>{giocatoriOrdinati.length}</strong> · {riepilogo.join(" · ")}
         </button>
         <button type="button" className="stato-asta" onClick={() => setAstaAperta(true)}>
           <span className="stato-soldi">
-            💰 <strong>{riepilogoAsta.residuo}</strong>
-            <small> · max </small>
-            <strong>{riepilogoAsta.maxSpendibile}</strong>
+            <span>
+              💰 <strong>{riepilogoAsta.residuo}</strong>
+            </span>
+            <span>
+              <small>max </small>
+              <strong>{riepilogoAsta.maxSpendibile}</strong>
+            </span>
           </span>
           <span className="stato-slot">
             {riepilogoAsta.reparti.map((r) => (
@@ -453,11 +458,11 @@ export function GiocatoriListPage({ vista }: Props) {
           <div className="toggle-group filtri-larga filtro-presi" role="group" aria-label="Quali giocatori presi">
             {(
               [
-                ["TUTTI", `Tutti (${totalePresi.tutti})`],
-                ["MIO", `Miei (${totalePresi.miei})`],
-                ["ALTRI", `Altri (${totalePresi.altri})`],
-              ] as [FiltroPresi, string][]
-            ).map(([valore, label]) => (
+                ["TUTTI", "Tutti", totalePresi.tutti],
+                ["MIO", "Miei", totalePresi.miei],
+                ["ALTRI", "Altri", totalePresi.altri],
+              ] as [FiltroPresi, string, number][]
+            ).map(([valore, label, conteggio]) => (
               <button
                 key={valore}
                 type="button"
@@ -465,6 +470,7 @@ export function GiocatoriListPage({ vista }: Props) {
                 onClick={() => setFiltroPresi(valore)}
               >
                 {label}
+                <small>{conteggio}</small>
               </button>
             ))}
           </div>
@@ -490,6 +496,7 @@ export function GiocatoriListPage({ vista }: Props) {
                 acquisto={acquisti[g.id] ?? null}
                 mostraDatiAsta={soloPreferiti}
                 onApri={handleApriDettaglio}
+                onLibera={soloPresi ? setDaLiberare : undefined}
                 onTogglePreferito={handleTogglePreferito}
                 onSalvaSpesaMassima={handleSalvaSpesaMassima}
                 onSalvaPriorita={handleSalvaPriorita}
@@ -525,6 +532,34 @@ export function GiocatoriListPage({ vista }: Props) {
         </NavLink>
       </nav>
 
+      {daLiberare != null && (
+        <div className="conferma-backdrop" onClick={() => setDaLiberare(null)}>
+          <div className="conferma" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+            <p>
+              Rimettere libero <strong>{completi.get(daLiberare)?.nome}</strong>?
+              <br />
+              {acquisti[daLiberare]?.stato === "MIO"
+                ? `Torna disponibile e ti vengono restituiti ${acquisti[daLiberare]?.prezzo ?? 0} crediti.`
+                : "Torna disponibile nel listone."}
+            </p>
+            <div className="conferma-azioni">
+              <button type="button" className="btn" onClick={() => setDaLiberare(null)}>
+                No
+              </button>
+              <button
+                type="button"
+                className="btn pericolo"
+                onClick={() => {
+                  handleAcquistoConAnnulla(daLiberare, null);
+                  setDaLiberare(null);
+                }}
+              >
+                Sì, libera
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {annulla && (
         <div className="toast" role="status">
           <span className="toast-testo">{annulla.testo}</span>
