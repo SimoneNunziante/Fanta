@@ -218,7 +218,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
             <input
               type="search"
               className="ricerca-input"
-              placeholder={soloPreferiti ? "Cerca preferiti…" : "Cerca…"}
+              placeholder="Cerca…"
               value={ricerca}
               onChange={(e) => setRicerca(e.currentTarget.value)}
               enterKeyHint="search"
