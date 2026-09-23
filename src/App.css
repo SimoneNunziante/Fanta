@@ -765,6 +765,7 @@ button {
 
 .modal-zoom-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   font-variant-numeric: tabular-nums;
@@ -796,6 +797,8 @@ button {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  touch-action: none;
+  user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -806,6 +809,14 @@ button {
 .modal-image {
   user-select: none;
   touch-action: none;
+  pointer-events: none;
+}
+
+.modal-suggerimento {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 20px;
+  text-align: center;
 }
 
 
