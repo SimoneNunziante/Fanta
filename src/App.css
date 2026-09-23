@@ -17,10 +17,10 @@
   --viola: #8e44ad;
   --blu: #396cd8;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  --tabbar-h: 60px;
+  --tabbar-h: 72px;
 
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: 19px;
   line-height: 1.4;
   color: var(--text);
   background-color: var(--bg);
@@ -80,14 +80,14 @@ button {
   position: sticky;
   top: 0;
   z-index: 20;
-  padding: calc(env(safe-area-inset-top) + 10px) 12px 8px;
+  padding: calc(env(safe-area-inset-top) + 12px) 14px 10px;
   background-color: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
 .topbar-riga {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 .ricerca {
@@ -97,12 +97,12 @@ button {
 
 .ricerca-input {
   width: 100%;
-  height: 44px;
-  padding: 0 40px 0 14px;
+  height: 53px;
+  padding: 0 48px 0 17px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   background-color: var(--surface);
-  font-size: 16px; /* >= 16px: evita lo zoom automatico su mobile */
+  font-size: 19px; /* >= 16px: evita lo zoom automatico su mobile */
   outline: none;
   -webkit-appearance: none;
   appearance: none;
@@ -118,10 +118,10 @@ button {
 
 .ricerca-clear {
   position: absolute;
-  right: 4px;
-  top: 4px;
-  width: 36px;
-  height: 36px;
+  right: 5px;
+  top: 5px;
+  width: 43px;
+  height: 43px;
   border: none;
   border-radius: 50%;
   background: none;
@@ -130,10 +130,10 @@ button {
 
 .filtri-btn {
   position: relative;
-  height: 44px;
-  padding: 0 14px;
+  height: 53px;
+  padding: 0 17px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   background-color: var(--surface);
   font-weight: 600;
   white-space: nowrap;
@@ -143,25 +143,25 @@ button {
   position: absolute;
   top: -6px;
   right: -6px;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 12px;
   background-color: var(--primary);
   color: var(--primary-text);
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 14px;
+  line-height: 24px;
 }
 
 .riepilogo {
   display: block;
   width: 100%;
-  margin-top: 6px;
+  margin-top: 7px;
   padding: 2px;
   border: none;
   background: none;
   color: var(--text-2);
-  font-size: 13px;
+  font-size: 16px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -173,7 +173,7 @@ button {
 }
 
 .lista-contenitore {
-  padding: 10px 12px calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 16px);
+  padding: 12px 14px calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 19px);
 }
 
 .lista {
@@ -182,23 +182,23 @@ button {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .sentinella {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .vuoto {
-  margin: 48px 16px;
+  margin: 58px 19px;
   text-align: center;
   color: var(--text-2);
 }
 
 .errore {
-  margin: 8px 0;
-  padding: 10px 12px;
-  border-radius: 10px;
+  margin: 10px 0;
+  padding: 12px 14px;
+  border-radius: 12px;
   background-color: color-mix(in srgb, var(--danger) 12%, transparent);
   color: var(--danger);
   font-weight: 500;
@@ -206,10 +206,10 @@ button {
 
 /* ---------- Card giocatore ---------- */
 .card {
-  padding: 16px 16px 14px;
+  padding: 18px 16px 16px;
   border: 1px solid var(--border);
-  border-left-width: 6px;
-  border-radius: 16px;
+  border-left-width: 7px;
+  border-radius: 19px;
   background-color: var(--surface);
   box-shadow: var(--shadow);
 }
@@ -227,7 +227,7 @@ button {
 .card-riga {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .card-nome {
@@ -238,7 +238,7 @@ button {
 }
 
 .nome-giocatore {
-  font-size: 21px;
+  font-size: 25px;
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -247,19 +247,19 @@ button {
 
 .card-squadra {
   margin-top: 2px;
-  font-size: 15px;
+  font-size: 18px;
   color: var(--text-2);
 }
 
 .stella {
   flex: none;
-  width: 52px;
-  height: 52px;
+  width: 62px;
+  height: 62px;
   margin: -8px -10px -8px 0;
   border: none;
   border-radius: 50%;
   background: none;
-  font-size: 32px;
+  font-size: 38px;
   line-height: 1;
   color: var(--text-2);
 }
@@ -274,30 +274,31 @@ button {
 
 .card-valori {
   display: flex;
-  gap: 24px;
-  margin-top: 10px;
+  gap: 29px;
+  margin-top: 12px;
   font-variant-numeric: tabular-nums;
 }
 
 .card-valori small,
 .card-spesa small {
   color: var(--text-2);
-  font-size: 14px;
+  font-size: 17px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
 .card-valori strong {
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .card-asta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 14px;
+  gap: 10px;
+  margin-top: 17px;
+  padding-top: 17px;
   border-top: 1px solid var(--border);
 }
 
@@ -308,13 +309,13 @@ button {
 }
 
 .spesa-massima-input {
-  width: 76px;
-  height: 48px;
+  width: 80px;
+  height: 58px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   background-color: var(--surface-2);
   text-align: center;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   outline: none;
@@ -326,12 +327,12 @@ button {
 
 .priorita-scelta {
   display: flex;
-  gap: 6px;
+  gap: 0;
 }
 
 .priorita-dot {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -342,8 +343,8 @@ button {
 
 .priorita-dot::after {
   content: "";
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 3px solid var(--c);
   opacity: 0.45;
@@ -370,14 +371,14 @@ button {
 .ruolo-badges {
   flex: none;
   display: flex;
-  gap: 4px;
+  gap: 5px;
 }
 
 .ruolo-badge {
-  min-width: 32px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 15px;
+  min-width: 38px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 18px;
   font-weight: 700;
   text-align: center;
   color: #ffffff;
@@ -424,13 +425,13 @@ button {
   justify-content: center;
   gap: 2px;
   color: var(--text-2);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   text-decoration: none;
 }
 
 .tab-icona {
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1;
 }
 
@@ -440,10 +441,10 @@ button {
 
 /* ---------- Pulsanti e controlli ---------- */
 .btn {
-  height: 44px;
-  padding: 0 16px;
+  height: 53px;
+  padding: 0 19px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   background-color: var(--surface-2);
   font-weight: 600;
   white-space: nowrap;
@@ -460,9 +461,9 @@ button {
 }
 
 .link-btn {
-  min-width: 64px;
-  height: 44px;
-  padding: 0 4px;
+  min-width: 77px;
+  height: 53px;
+  padding: 0 5px;
   border: none;
   background: none;
   color: var(--primary);
@@ -478,15 +479,15 @@ button {
 .toggle-group {
   display: inline-flex;
   padding: 3px;
-  border-radius: 12px;
+  border-radius: 14px;
   background-color: var(--surface-2);
 }
 
 .toggle {
-  min-height: 40px;
-  padding: 0 16px;
+  min-height: 48px;
+  padding: 0 19px;
   border: none;
-  border-radius: 9px;
+  border-radius: 11px;
   background: none;
   font-weight: 600;
   color: var(--text-2);
@@ -501,12 +502,12 @@ button {
 .squadra-select {
   flex: 1;
   min-width: 0;
-  height: 44px;
-  padding: 0 12px;
+  height: 53px;
+  padding: 0 14px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   background-color: var(--surface-2);
-  font-size: 16px;
+  font-size: 19px;
 }
 
 /* ---------- Pannello filtri (bottom sheet) ---------- */
@@ -527,7 +528,7 @@ button {
   max-height: 88dvh;
   display: flex;
   flex-direction: column;
-  border-radius: 18px 18px 0 0;
+  border-radius: 22px 22px 0 0;
   background-color: var(--surface);
   animation: sali 0.2s ease-out;
 }
@@ -536,55 +537,55 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 12px;
+  padding: 7px 14px;
   border-bottom: 1px solid var(--border);
 }
 
 .sheet-header h2 {
   margin: 0;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 .sheet-body {
   flex: 1;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 4px 16px 16px;
+  padding: 5px 19px 19px;
 }
 
 .sheet-body section {
-  padding: 12px 0;
+  padding: 14px 0;
 }
 
 .sheet-body h3 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: var(--text-2);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .sheet-footer {
-  padding: 10px 16px calc(env(safe-area-inset-bottom) + 10px);
+  padding: 12px 19px calc(env(safe-area-inset-bottom) + 12px);
   border-top: 1px solid var(--border);
 }
 
 .filtri-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .ruolo-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .ruolo-selector .toggle {
-  min-width: 48px;
-  padding: 0 12px;
+  min-width: 58px;
+  padding: 0 14px;
   border: 2px solid var(--border);
   background-color: var(--surface-2);
   color: var(--text);
@@ -634,11 +635,11 @@ button {
 .backup-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .ordina-row .squadra-select {
-  min-width: 150px;
+  min-width: 180px;
 }
 
 .backup-row .errore {
@@ -671,10 +672,10 @@ button {
 .modal-content {
   width: min(100vw, 1400px);
   height: min(100dvh, 1000px);
-  padding: calc(env(safe-area-inset-top) + 8px) 12px 12px;
+  padding: calc(env(safe-area-inset-top) + 10px) 14px 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   background-color: var(--surface);
   color: var(--text);
 }
@@ -683,7 +684,7 @@ button {
   .modal-content {
     width: min(95vw, 1400px);
     height: min(92vh, 1000px);
-    border-radius: 12px;
+    border-radius: 14px;
   }
 }
 
@@ -691,26 +692,26 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: 22px;
 }
 
 .modal-zoom-controls {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-variant-numeric: tabular-nums;
 }
 
 .modal-zoom-controls button {
-  min-width: 40px;
-  height: 40px;
+  min-width: 48px;
+  height: 48px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: var(--surface-2);
 }
 
@@ -720,11 +721,11 @@ button {
 }
 
 .modal-close {
-  width: 44px;
-  height: 44px;
+  width: 53px;
+  height: 53px;
   border: none;
   background: none;
-  font-size: 24px;
+  font-size: 29px;
   line-height: 1;
 }
 
@@ -735,7 +736,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: var(--surface-2);
 }
 
