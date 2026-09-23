@@ -14,6 +14,8 @@ interface Props {
   sortCampo: CampoOrdinamento;
   direzione: Direzione;
   totaleRisultati: number;
+  mostraPresi: boolean;
+  onMostraPresiChange: (v: boolean) => void;
   onModalitaChange: (m: Modalita) => void;
   onBaseChange: (b: Base) => void;
   onRuoloToggle: (r: string) => void;
@@ -97,6 +99,26 @@ export function FiltriSheet(props: Props) {
                   Formazione
                 </button>
               )}
+            </div>
+          </section>
+
+          <section>
+            <h3>Giocatori già presi</h3>
+            <div className="toggle-group filtri-larga" role="group" aria-label="Giocatori già presi">
+              <button
+                type="button"
+                className={!props.mostraPresi ? "toggle active" : "toggle"}
+                onClick={() => props.onMostraPresiChange(false)}
+              >
+                Nascondi
+              </button>
+              <button
+                type="button"
+                className={props.mostraPresi ? "toggle active" : "toggle"}
+                onClick={() => props.onMostraPresiChange(true)}
+              >
+                Mostra
+              </button>
             </div>
           </section>
 

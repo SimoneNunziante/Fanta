@@ -235,6 +235,32 @@ button {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+.card-valori {
+  cursor: pointer;
+}
+
+.card[data-acquisto] {
+  opacity: 0.55;
+}
+
+.acquisto-badge {
+  padding: 3px 12px;
+  border-radius: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: var(--text-2);
+}
+
+.acquisto-badge[data-stato="mio"] {
+  background-color: var(--verde);
 }
 
 .nome-giocatore {
@@ -768,4 +794,351 @@ button {
 .modal-image {
   user-select: none;
   touch-action: none;
+}
+
+
+/* ---------- Stato asta (barra in alto) ---------- */
+.stato-asta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background-color: var(--surface);
+  font-size: 26px;
+  text-align: left;
+}
+
+.stato-soldi small {
+  color: var(--text-2);
+}
+
+.stato-slot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  color: var(--text-2);
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+.slot.completo {
+  color: var(--verde);
+  font-weight: 700;
+}
+
+/* ---------- Scheda dettaglio ---------- */
+.dettaglio {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  background-color: var(--bg);
+  animation: dissolvenza 0.12s ease-out;
+}
+
+.dettaglio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+  font-size: 30px;
+}
+
+.dettaglio-header .stella {
+  margin: 0;
+}
+
+.dettaglio-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 16px calc(env(safe-area-inset-bottom) + 32px);
+}
+
+.dettaglio-nome {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.dettaglio-stato {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background-color: var(--surface-2);
+  font-weight: 700;
+}
+
+.dettaglio-stato[data-stato="mio"] {
+  background-color: color-mix(in srgb, var(--verde) 20%, transparent);
+  color: var(--verde);
+}
+
+.dettaglio-kpi {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.dettaglio-kpi > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 6px;
+  border-radius: 16px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.dettaglio-kpi small {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.dettaglio-kpi small,
+.valori-numeri small {
+  color: var(--text-2);
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dettaglio-kpi strong {
+  font-size: 40px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dettaglio-valori {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.valori-box {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background-color: var(--surface);
+  opacity: 0.8;
+}
+
+.valori-box.attivo {
+  border: 3px solid var(--primary);
+  opacity: 1;
+}
+
+.valori-titolo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.valori-numeri {
+  display: flex;
+  gap: 28px;
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.valori-numeri strong {
+  font-size: 38px;
+}
+
+.valori-altra-base {
+  margin-top: 4px;
+  color: var(--text-2);
+  font-size: 21px;
+}
+
+.dettaglio-sezione {
+  margin-top: 22px;
+}
+
+.dettaglio-sezione h3 {
+  margin: 0 0 12px;
+  color: var(--text-2);
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prezzo-row,
+.azioni-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.azioni-row {
+  margin-top: 12px;
+}
+
+.azioni-row .btn {
+  flex: 1;
+}
+
+.prezzo-input {
+  flex: 1;
+  min-width: 0;
+  height: 80px;
+  padding: 0 18px;
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  background-color: var(--surface);
+  font-size: 40px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.prezzo-input:focus {
+  border-color: var(--primary);
+}
+
+.prezzo-row .btn {
+  height: 80px;
+  font-size: 30px;
+}
+
+.avviso {
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.avviso[data-livello="rosso"] {
+  background-color: color-mix(in srgb, var(--danger) 18%, transparent);
+  color: var(--danger);
+}
+
+.avviso[data-livello="arancio"] {
+  background-color: color-mix(in srgb, #f08c00 18%, transparent);
+  color: #f08c00;
+}
+
+.dettaglio-body > .btn.pieno {
+  margin-top: 24px;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+}
+
+.btn.pericolo {
+  border-color: var(--danger);
+  background-color: var(--danger);
+  color: #ffffff;
+}
+
+/* ---------- Pannello asta ---------- */
+.filtri-larga {
+  display: flex;
+  width: 100%;
+}
+
+.filtri-larga .toggle {
+  flex: 1;
+}
+
+.rosa-reparto {
+  margin-bottom: 18px;
+}
+
+.rosa-reparto-titolo {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.rosa-conteggio {
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.rosa-conteggio.completo {
+  color: var(--verde);
+}
+
+.rosa-vuota {
+  margin: 6px 0 0;
+  color: var(--text-2);
+  font-size: 24px;
+}
+
+.rosa-lista {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.rosa-riga {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 6px 4px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: none;
+  text-align: left;
+}
+
+.rosa-nome {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.config-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-2);
+  font-size: 24px;
+}
+
+.numero-input {
+  width: 100%;
+  min-width: 0;
+  height: 70px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background-color: var(--surface-2);
+  color: var(--text);
+  font-size: 32px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.numero-input:focus {
+  border-color: var(--primary);
+}
+
+.nota {
+  margin: 10px 0 0;
+  color: var(--text-2);
+  font-size: 22px;
 }

@@ -1,9 +1,9 @@
-import type { Priorita } from "./types";
+import type { Acquisto, ConfigAsta, Priorita } from "./types";
 
 /**
  * Sostituisce il backend Quarkus + Postgres: i dati dei giocatori sono statici
  * (public/data/giocatori.json, esportato dalle migration V1.0-V1.5), mentre i dati
- * dell'utente (preferiti, spesa massima, priorita) vivono nel localStorage del browser.
+ * dell'utente (preferiti, spesa massima, priorita, asta) vivono nel localStorage del browser.
  */
 
 export interface GiocatoreRaw {
@@ -25,12 +25,21 @@ export interface DatiUtente {
   preferiti: number[];
   spesaMassima: Record<string, number>;
   priorita: Record<string, Priorita>;
+  acquisti: Record<string, Acquisto>;
+  configAsta: ConfigAsta;
 }
 
 interface DatiStatici {
   giocatori: GiocatoreRaw[];
-  datiIniziali: DatiUtente;
+  /** Lo snapshot iniziale non ha i campi dell'asta: li completa normalizzaDatiUtente. */
+  datiIniziali: Partial<DatiUtente>;
 }
+
+export const CONFIG_ASTA_DEFAULT: ConfigAsta = {
+  budget: 500,
+  slotClassico: { P: 3, D: 8, C: 8, A: 6 },
+  slotMantra: { Por: 3, Mov: 22 },
+};
 
 const CHIAVE_STORAGE = "fantamantra.datiUtente.v1";
 
@@ -62,7 +71,7 @@ export async function leggiDatiUtente(): Promise<DatiUtente> {
   if (salvati) {
     return normalizzaDatiUtente(JSON.parse(salvati));
   }
-  return structuredClone((await caricaDatiStatici()).datiIniziali);
+  return normalizzaDatiUtente(structuredClone((await caricaDatiStatici()).datiIniziali));
 }
 
 export function salvaDatiUtente(dati: DatiUtente): void {
@@ -75,15 +84,25 @@ export async function modificaDatiUtente(modifica: (dati: DatiUtente) => void): 
   salvaDatiUtente(dati);
 }
 
-/** Valida un backup importato (o letto dallo storage) e lo riporta alla forma attesa. */
+/**
+ * Valida un backup importato (o letto dallo storage) e lo riporta alla forma attesa.
+ * I campi aggiunti dopo (acquisti, configAsta) prendono un default, cosi' i backup vecchi restano validi.
+ */
 export function normalizzaDatiUtente(valore: unknown): DatiUtente {
   const v = valore as Partial<DatiUtente> | null;
   if (!v || typeof v !== "object" || !Array.isArray(v.preferiti)) {
     throw new Error("File di backup non valido");
   }
+  const config = v.configAsta;
   return {
     preferiti: v.preferiti.filter((id): id is number => typeof id === "number"),
     spesaMassima: v.spesaMassima ?? {},
     priorita: v.priorita ?? {},
+    acquisti: v.acquisti ?? {},
+    configAsta: {
+      budget: config?.budget ?? CONFIG_ASTA_DEFAULT.budget,
+      slotClassico: { ...CONFIG_ASTA_DEFAULT.slotClassico, ...config?.slotClassico },
+      slotMantra: { ...CONFIG_ASTA_DEFAULT.slotMantra, ...config?.slotMantra },
+    },
   };
 }

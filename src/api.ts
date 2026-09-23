@@ -1,5 +1,5 @@
-import type { Base, Giocatore, Modalita, Priorita } from "./types";
-import { esisteGiocatore, leggiDatiUtente, leggiGiocatori, modificaDatiUtente } from "./store";
+import type { Acquisto, Base, ConfigAsta, Giocatore, Modalita, Priorita } from "./types";
+import { esisteGiocatore, leggiDatiUtente, leggiGiocatori, modificaDatiUtente, type GiocatoreRaw } from "./store";
 
 const PRIORITA_VALIDE: Priorita[] = ["VERDE", "GIALLO", "ROSSO"];
 
@@ -63,4 +63,41 @@ export async function aggiornaPriorita(giocatoreId: number, valore: Priorita | n
       dati.priorita[giocatoreId] = valore;
     }
   });
+}
+
+export async function aggiornaAcquisto(giocatoreId: number, acquisto: Acquisto | null): Promise<void> {
+  if (acquisto?.prezzo != null && (acquisto.prezzo < 0 || acquisto.prezzo > 9999)) {
+    throw new Error("Prezzo non valido");
+  }
+  await verificaGiocatore(giocatoreId);
+  await modificaDatiUtente((dati) => {
+    if (acquisto == null) {
+      delete dati.acquisti[giocatoreId];
+    } else {
+      dati.acquisti[giocatoreId] = acquisto;
+    }
+  });
+}
+
+export async function aggiornaConfigAsta(config: ConfigAsta): Promise<void> {
+  await modificaDatiUtente((dati) => {
+    dati.configAsta = config;
+  });
+}
+
+/** Azzera solo gli acquisti: preferiti, spese massime, priorita e configurazione restano. */
+export async function azzeraAcquisti(): Promise<void> {
+  await modificaDatiUtente((dati) => {
+    dati.acquisti = {};
+  });
+}
+
+export async function fetchDatiAsta(): Promise<{ acquisti: Record<string, Acquisto>; configAsta: ConfigAsta }> {
+  const { acquisti, configAsta } = await leggiDatiUtente();
+  return { acquisti, configAsta };
+}
+
+/** Dati completi (Classico e Mantra, base 500 e 1000) per la scheda dettaglio e i conteggi dell'asta. */
+export async function fetchGiocatoriCompleti(): Promise<Map<number, GiocatoreRaw>> {
+  return new Map((await leggiGiocatori()).map((g) => [g.id, g]));
 }

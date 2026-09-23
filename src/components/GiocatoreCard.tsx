@@ -1,12 +1,14 @@
 import { memo } from "react";
 import { coloreRuolo } from "../ruoloColori";
 import { SpesaMassimaInput } from "./SpesaMassimaInput";
-import type { Giocatore, Priorita } from "../types";
+import type { Acquisto, Giocatore, Priorita } from "../types";
 
 interface Props {
   giocatore: Giocatore;
   preferito: boolean;
+  acquisto: Acquisto | null;
   mostraDatiAsta: boolean;
+  onApri: (giocatoreId: number) => void;
   onTogglePreferito: (giocatoreId: number, preferito: boolean) => void;
   onSalvaSpesaMassima: (giocatoreId: number, valore: number | null) => void;
   onSalvaPriorita: (giocatoreId: number, valore: Priorita | null) => void;
@@ -21,15 +23,21 @@ const PRIORITA: { valore: Priorita; label: string }[] = [
 export const GiocatoreCard = memo(function GiocatoreCard({
   giocatore: g,
   preferito,
+  acquisto,
   mostraDatiAsta,
+  onApri,
   onTogglePreferito,
   onSalvaSpesaMassima,
   onSalvaPriorita,
 }: Props) {
   return (
-    <li className="card" data-priorita={mostraDatiAsta ? g.priorita?.toLowerCase() : undefined}>
+    <li
+      className="card"
+      data-priorita={mostraDatiAsta ? g.priorita?.toLowerCase() : undefined}
+      data-acquisto={acquisto?.stato.toLowerCase()}
+    >
       <div className="card-riga">
-        <div className="card-nome">
+        <button type="button" className="card-nome" onClick={() => onApri(g.id)}>
           <span className="nome-giocatore">{g.nome}</span>
           <div className="card-sottotitolo">
             <div className="ruolo-badges">
@@ -40,8 +48,13 @@ export const GiocatoreCard = memo(function GiocatoreCard({
               ))}
             </div>
             <span className="card-squadra">{g.squadra}</span>
+            {acquisto && (
+              <span className="acquisto-badge" data-stato={acquisto.stato.toLowerCase()}>
+                {acquisto.stato === "MIO" ? `Mio ${acquisto.prezzo}` : "Preso"}
+              </span>
+            )}
           </div>
-        </div>
+        </button>
         <button
           type="button"
           className={preferito ? "stella attiva" : "stella"}
@@ -53,7 +66,7 @@ export const GiocatoreCard = memo(function GiocatoreCard({
         </button>
       </div>
 
-      <div className="card-valori">
+      <div className="card-valori" onClick={() => onApri(g.id)}>
         <span>
           <small>Quot.</small> <strong>{g.quotazioneAsta}</strong>
         </span>

@@ -6,6 +6,8 @@ React 19 + TypeScript + Vite 7, react-router (HashRouter). Nessun backend. Packa
 ## Architettura
 - `public/data/giocatori.json`: dati statici (giocatori e snapshot iniziale dei dati utente), esportati dalle migration Flyway V1.0–V1.5 del progetto originale `../fantamantra` (Quarkus + Postgres).
 - `src/store.ts`: sostituisce il DB. Carica il JSON e legge/scrive i dati utente in `localStorage` (chiave `fantamantra.datiUtente.v1`).
+- Dati utente: `preferiti`, `spesaMassima`, `priorita`, `acquisti` (MIO/ALTRI con prezzo) e `configAsta` (budget e slot Classico P/D/C/A, Mantra Por/Mov). `normalizzaDatiUtente` mette i default ai campi mancanti, così i backup vecchi restano validi.
+- `src/asta.ts`: residuo, slot per reparto e massimo spendibile (residuo meno 1 credito per ogni altro slot libero). Gli slot seguono la modalità attiva nei filtri.
 - `src/api.ts`, `src/preferiti.ts`: stessa firma delle vecchie chiamate REST, così i componenti non cambiano. La logica è portata da `GiocatoreService` e `PreferitoService`.
 - PWA: `public/manifest.webmanifest` e `public/sw.js` (stale-while-revalidate), registrato in `src/main.tsx` solo in produzione.
 

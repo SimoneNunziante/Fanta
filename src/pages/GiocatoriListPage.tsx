@@ -3,10 +3,23 @@ import { NavLink } from "react-router-dom";
 import { GiocatoreCard } from "../components/GiocatoreCard";
 import { FiltriSheet } from "../components/FiltriSheet";
 import { FormazioneModal } from "../components/FormazioneModal";
-import { fetchGiocatori, aggiornaSpesaMassima, aggiornaPriorita } from "../api";
+import { DettaglioGiocatore } from "../components/DettaglioGiocatore";
+import { AstaSheet } from "../components/AstaSheet";
+import {
+  fetchGiocatori,
+  fetchGiocatoriCompleti,
+  fetchDatiAsta,
+  aggiornaSpesaMassima,
+  aggiornaPriorita,
+  aggiornaAcquisto,
+  aggiornaConfigAsta,
+  azzeraAcquisti,
+} from "../api";
+import { calcolaRiepilogo } from "../asta";
+import { CONFIG_ASTA_DEFAULT, type GiocatoreRaw } from "../store";
 import { formazioneUrl } from "../formazioni";
 import { fetchPreferiti, aggiungiPreferito, rimuoviPreferito } from "../preferiti";
-import type { Base, CampoOrdinamento, Direzione, Giocatore, Modalita, Priorita } from "../types";
+import type { Acquisto, Base, CampoOrdinamento, ConfigAsta, Direzione, Giocatore, Modalita, Priorita } from "../types";
 import "../App.css";
 
 function confronta(a: Giocatore, b: Giocatore, campo: CampoOrdinamento): number {
@@ -23,6 +36,35 @@ function normalizza(testo: string): string {
     .replace(/\p{Diacritic}/gu, "")
     .replace(/[^a-z0-9]/gi, "")
     .toLowerCase();
+}
+
+/** Distanza di Levenshtein, per tollerare errori di battitura nella ricerca. */
+function distanza(a: string, b: string): number {
+  const riga = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    let diagonale = riga[0];
+    riga[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const sopra = riga[j];
+      riga[j] = Math.min(riga[j] + 1, riga[j - 1] + 1, diagonale + (a[i - 1] === b[j - 1] ? 0 : 1));
+      diagonale = sopra;
+    }
+  }
+  return riga[b.length];
+}
+
+function corrispondeEsatto(g: Giocatore, query: string): boolean {
+  return normalizza(g.nome).includes(query) || normalizza(g.squadra).startsWith(query);
+}
+
+/** Confronta la query con l'inizio di ogni parola del nome, ammettendo 1 errore (2 dai 7 caratteri). */
+function corrispondeApprossimato(g: Giocatore, query: string): boolean {
+  if (query.length < 4) return false;
+  const soglia = query.length >= 7 ? 2 : 1;
+  return g.nome
+    .split(/[\s.'-]+/)
+    .map(normalizza)
+    .some((parola) => parola.length >= 3 && distanza(parola.slice(0, query.length), query) <= soglia);
 }
 
 /** Quante card rendere per volta: le successive arrivano scorrendo (scroll continuo). */
@@ -44,7 +86,13 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
   const [base, setBase] = useState<Base>("MILLE");
   const [ruoli, setRuoli] = useState<string[]>([]);
   const [squadra, setSquadra] = useState<string | null>(null);
-  const [formazioneAperta, setFormazioneAperta] = useState(false);
+  const [formazioneSquadra, setFormazioneSquadra] = useState<string | null>(null);
+  const [dettaglioId, setDettaglioId] = useState<number | null>(null);
+  const [astaAperta, setAstaAperta] = useState(false);
+  const [mostraPresi, setMostraPresi] = useState(false);
+  const [completi, setCompleti] = useState<Map<number, GiocatoreRaw>>(new Map());
+  const [acquisti, setAcquisti] = useState<Record<string, Acquisto>>({});
+  const [configAsta, setConfigAsta] = useState<ConfigAsta>(CONFIG_ASTA_DEFAULT);
   const [filtriAperti, setFiltriAperti] = useState(false);
   const [ricerca, setRicerca] = useState("");
   const [sortCampo, setSortCampo] = useState<CampoOrdinamento>("nome");
@@ -55,6 +103,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
   const [errore, setErrore] = useState<string | null>(null);
   const [caricamento, setCaricamento] = useState(false);
   const sentinellaRef = useRef<HTMLDivElement>(null);
+  const ricercaRef = useRef<HTMLInputElement>(null);
 
   function handleModalitaChange(nuovaModalita: Modalita) {
     setModalita(nuovaModalita);
@@ -132,6 +181,69 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
     [aggiornaCampo],
   );
 
+  const handleSalvaAcquisto = useCallback(async (giocatoreId: number, acquisto: Acquisto | null) => {
+    let precedente: Acquisto | undefined;
+    setAcquisti((prev) => {
+      precedente = prev[giocatoreId];
+      const nuovo = { ...prev };
+      if (acquisto) nuovo[giocatoreId] = acquisto;
+      else delete nuovo[giocatoreId];
+      return nuovo;
+    });
+    try {
+      await aggiornaAcquisto(giocatoreId, acquisto);
+    } catch (err) {
+      setAcquisti((prev) => {
+        const nuovo = { ...prev };
+        if (precedente) nuovo[giocatoreId] = precedente;
+        else delete nuovo[giocatoreId];
+        return nuovo;
+      });
+      setErrore(err instanceof Error ? err.message : "Errore nel salvataggio dell'acquisto");
+    }
+  }, []);
+
+  async function handleSalvaConfig(config: ConfigAsta) {
+    setConfigAsta(config);
+    await aggiornaConfigAsta(config);
+  }
+
+  async function handleAzzeraAcquisti() {
+    setAcquisti({});
+    await azzeraAcquisti();
+  }
+
+  const handleApriDettaglio = useCallback((giocatoreId: number) => {
+    ricercaRef.current?.blur();
+    setDettaglioId(giocatoreId);
+  }, []);
+
+  const handleChiudiDettaglio = useCallback(() => {
+    setDettaglioId(null);
+    // Pronto per il prossimo nome chiamato: il testo cercato resta selezionato e si sovrascrive digitando.
+    const input = ricercaRef.current;
+    if (input && input.value) {
+      input.focus();
+      input.select();
+    }
+  }, []);
+
+  const riepilogoAsta = useMemo(
+    () => calcolaRiepilogo(configAsta, acquisti, completi, modalita),
+    [configAsta, acquisti, completi, modalita],
+  );
+
+  const rosa = useMemo(
+    () =>
+      Object.entries(acquisti)
+        .filter(([, a]) => a.stato === "MIO")
+        .flatMap(([id, a]) => {
+          const giocatore = completi.get(Number(id));
+          return giocatore ? [{ giocatore, prezzo: a.prezzo ?? 0 }] : [];
+        }),
+    [acquisti, completi],
+  );
+
   const squadreDisponibili = useMemo(
     () => Array.from(new Set(giocatori.map((g) => g.squadra))).sort((a, b) => a.localeCompare(b, "it")),
     [giocatori]
@@ -139,6 +251,9 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
 
   const giocatoriFiltrati = useMemo(() => {
     let risultato = soloPreferiti ? giocatori.filter((g) => preferiti.has(g.id)) : giocatori;
+    if (!mostraPresi) {
+      risultato = risultato.filter((g) => !acquisti[g.id]);
+    }
     if (ruoli.length > 0) {
       risultato = risultato.filter((g) => ruoli.every((r) => g.ruolo.includes(r)));
     }
@@ -147,10 +262,11 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
     }
     const query = normalizza(ricerca.trim());
     if (query) {
-      risultato = risultato.filter((g) => normalizza(g.nome).includes(query));
+      const esatti = risultato.filter((g) => corrispondeEsatto(g, query));
+      risultato = esatti.length > 0 ? esatti : risultato.filter((g) => corrispondeApprossimato(g, query));
     }
     return risultato;
-  }, [giocatori, soloPreferiti, preferiti, ruoli, squadra, ricerca]);
+  }, [giocatori, soloPreferiti, preferiti, ruoli, squadra, ricerca, mostraPresi, acquisti]);
 
   const giocatoriOrdinati = useMemo(() => {
     const ordinati = [...giocatoriFiltrati].sort((a, b) => confronta(a, b, sortCampo));
@@ -163,7 +279,17 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
   useEffect(() => {
     setVisibili(BLOCCO_CARD);
     window.scrollTo({ top: 0 });
-  }, [modalita, base, ruoli, squadra, ricerca, soloPreferiti, sortCampo, direzione]);
+  }, [modalita, base, ruoli, squadra, ricerca, soloPreferiti, sortCampo, direzione, mostraPresi]);
+
+  useEffect(() => {
+    Promise.all([fetchGiocatoriCompleti(), fetchDatiAsta()])
+      .then(([mappa, dati]) => {
+        setCompleti(mappa);
+        setAcquisti(dati.acquisti);
+        setConfigAsta(dati.configAsta);
+      })
+      .catch((err: Error) => setErrore(err.message));
+  }, []);
 
   // Si riaggancia a ogni blocco: se la sentinella resta visibile (lista corta, schermo alto)
   // la nuova osservazione scatta subito e carica il blocco successivo.
@@ -201,7 +327,9 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
     };
   }, [modalita, base]);
 
-  const filtriAttivi = ruoli.length + (squadra ? 1 : 0);
+  const filtriAttivi = ruoli.length + (squadra ? 1 : 0) + (mostraPresi ? 1 : 0);
+  const giocatoreDettaglio = dettaglioId != null ? completi.get(dettaglioId) : undefined;
+  const statoDettaglio = dettaglioId != null ? giocatori.find((g) => g.id === dettaglioId) : undefined;
   const riepilogo = [
     modalita === "CLASSICO" ? "Classico" : "Mantra",
     base === "MILLE" ? "1000" : "500",
@@ -221,10 +349,23 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
               placeholder="Cerca…"
               value={ricerca}
               onChange={(e) => setRicerca(e.currentTarget.value)}
-              enterKeyHint="search"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && giocatoriOrdinati.length > 0) handleApriDettaglio(giocatoriOrdinati[0].id);
+              }}
+              enterKeyHint="go"
+              autoFocus={!soloPreferiti}
+              ref={ricercaRef}
             />
             {ricerca && (
-              <button type="button" className="ricerca-clear" aria-label="Svuota ricerca" onClick={() => setRicerca("")}>
+              <button
+                type="button"
+                className="ricerca-clear"
+                aria-label="Svuota ricerca"
+                onClick={() => {
+                  setRicerca("");
+                  ricercaRef.current?.focus();
+                }}
+              >
                 ✕
               </button>
             )}
@@ -241,6 +382,20 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
         </div>
         <button type="button" className="riepilogo" onClick={() => setFiltriAperti(true)}>
           {riepilogo.join(" · ")} — <strong>{giocatoriOrdinati.length}</strong>
+        </button>
+        <button type="button" className="stato-asta" onClick={() => setAstaAperta(true)}>
+          <span className="stato-soldi">
+            💰 <strong>{riepilogoAsta.residuo}</strong>
+            <small> · max </small>
+            <strong>{riepilogoAsta.maxSpendibile}</strong>
+          </span>
+          <span className="stato-slot">
+            {riepilogoAsta.reparti.map((r) => (
+              <span key={r.reparto} className={r.presi >= r.totale ? "slot completo" : "slot"}>
+                {r.reparto} {r.presi}/{r.totale}
+              </span>
+            ))}
+          </span>
         </button>
       </header>
 
@@ -261,7 +416,9 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
                 key={g.id}
                 giocatore={g}
                 preferito={preferiti.has(g.id)}
+                acquisto={acquisti[g.id] ?? null}
                 mostraDatiAsta={soloPreferiti}
+                onApri={handleApriDettaglio}
                 onTogglePreferito={handleTogglePreferito}
                 onSalvaSpesaMassima={handleSalvaSpesaMassima}
                 onSalvaPriorita={handleSalvaPriorita}
@@ -299,6 +456,8 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
           sortCampo={sortCampo}
           direzione={direzione}
           totaleRisultati={giocatoriOrdinati.length}
+          mostraPresi={mostraPresi}
+          onMostraPresiChange={setMostraPresi}
           onModalitaChange={handleModalitaChange}
           onBaseChange={setBase}
           onRuoloToggle={handleRuoloToggle}
@@ -308,17 +467,51 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
           onDirezioneChange={setDirezione}
           onApriFormazione={() => {
             setFiltriAperti(false);
-            setFormazioneAperta(true);
+            setFormazioneSquadra(squadra);
           }}
           onResetFiltri={handleResetFiltri}
           onClose={() => setFiltriAperti(false)}
         />
       )}
-      {formazioneAperta && squadra && (
+      {giocatoreDettaglio && (
+        <DettaglioGiocatore
+          key={giocatoreDettaglio.id}
+          giocatore={giocatoreDettaglio}
+          modalita={modalita}
+          base={base}
+          preferito={preferiti.has(giocatoreDettaglio.id)}
+          spesaMassima={statoDettaglio?.spesaMassima ?? null}
+          priorita={statoDettaglio?.priorita ?? null}
+          acquisto={acquisti[giocatoreDettaglio.id] ?? null}
+          riepilogo={riepilogoAsta}
+          onTogglePreferito={handleTogglePreferito}
+          onSalvaSpesaMassima={handleSalvaSpesaMassima}
+          onSalvaPriorita={handleSalvaPriorita}
+          onSalvaAcquisto={handleSalvaAcquisto}
+          onApriFormazione={setFormazioneSquadra}
+          onClose={handleChiudiDettaglio}
+        />
+      )}
+      {astaAperta && (
+        <AstaSheet
+          config={configAsta}
+          riepilogo={riepilogoAsta}
+          modalita={modalita}
+          rosa={rosa}
+          onSalvaConfig={handleSalvaConfig}
+          onAzzeraAcquisti={handleAzzeraAcquisti}
+          onApriGiocatore={(id) => {
+            setAstaAperta(false);
+            setDettaglioId(id);
+          }}
+          onClose={() => setAstaAperta(false)}
+        />
+      )}
+      {formazioneSquadra && (
         <FormazioneModal
-          squadra={squadra}
-          url={formazioneUrl(squadra)}
-          onClose={() => setFormazioneAperta(false)}
+          squadra={formazioneSquadra}
+          url={formazioneUrl(formazioneSquadra)}
+          onClose={() => setFormazioneSquadra(null)}
         />
       )}
     </div>
