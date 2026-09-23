@@ -28,10 +28,10 @@ export function BackupDati() {
 
   return (
     <div className="backup-row">
-      <button type="button" className="toggle" onClick={esporta}>
+      <button type="button" className="btn" onClick={esporta}>
         Esporta backup
       </button>
-      <button type="button" className="toggle" onClick={() => inputRef.current?.click()}>
+      <button type="button" className="btn" onClick={() => inputRef.current?.click()}>
         Importa backup
       </button>
       <input
