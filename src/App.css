@@ -54,6 +54,16 @@ body {
   color: var(--text);
 }
 
+/* Niente zoom col doppio tocco (resta il pinch con due dita), e niente ritardo sui tocchi. */
+html,
+body,
+button,
+input,
+select,
+a {
+  touch-action: manipulation;
+}
+
 body.scroll-bloccato {
   overflow: hidden;
 }
@@ -1310,4 +1320,104 @@ button {
     transform: translateY(20px);
     opacity: 0;
   }
+}
+
+
+/* ---------- Ruoli rapidi (barra in alto) ---------- */
+.ruoli-rapidi {
+  margin: 10px -12px 0;
+  padding: 0 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ruoli-rapidi::-webkit-scrollbar {
+  display: none;
+}
+
+.ruoli-rapidi .ruolo-selector {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.ruoli-rapidi .toggle {
+  flex: none;
+  min-width: 64px;
+  min-height: 60px;
+  padding: 0 14px;
+  font-size: 26px;
+}
+
+/* ---------- Alternative nell'avviso ---------- */
+.toast {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.toast-riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast-riga .toast-testo {
+  flex: 1 1 60%;
+}
+
+.toast-chiudi {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 26px;
+}
+
+.alternative-titolo {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.alternative {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alternativa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  text-align: left;
+}
+
+.alternativa-nome {
+  flex: 1;
+  min-width: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.alternativa-valori {
+  flex-basis: 100%;
+  font-size: 22px;
+  opacity: 0.85;
 }

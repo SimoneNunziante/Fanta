@@ -1,9 +1,11 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { GiocatoriListPage } from "./pages/GiocatoriListPage";
 import { useTema } from "./useTema";
+import { useWakeLock } from "./useWakeLock";
 
 function App() {
   useTema();
+  useWakeLock();
 
   return (
     <HashRouter>

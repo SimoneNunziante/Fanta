@@ -5,6 +5,7 @@ import { FiltriSheet } from "../components/FiltriSheet";
 import { FormazioneModal } from "../components/FormazioneModal";
 import { DettaglioGiocatore } from "../components/DettaglioGiocatore";
 import { AstaSheet } from "../components/AstaSheet";
+import { RuoloSelector } from "../components/RuoloSelector";
 import {
   fetchGiocatori,
   fetchGiocatoriCompleti,
@@ -19,7 +20,7 @@ import { calcolaRiepilogo } from "../asta";
 import { CONFIG_ASTA_DEFAULT, type GiocatoreRaw } from "../store";
 import { formazioneUrl } from "../formazioni";
 import { fetchPreferiti, aggiungiPreferito, rimuoviPreferito } from "../preferiti";
-import { RUOLI_CLASSICO, RUOLI_MANTRA } from "../ruoloColori";
+import { coloreRuolo, RUOLI_CLASSICO, RUOLI_MANTRA } from "../ruoloColori";
 import type { Acquisto, Base, CampoOrdinamento, ConfigAsta, Direzione, Giocatore, Modalita, Priorita } from "../types";
 import "../App.css";
 
@@ -116,9 +117,12 @@ export function GiocatoriListPage({ vista }: Props) {
   const [astaAperta, setAstaAperta] = useState(false);
   const [mostraPresi, setMostraPresi] = useState(false);
   const [filtroPresi, setFiltroPresi] = useState<FiltroPresi>("TUTTI");
-  const [annulla, setAnnulla] = useState<{ giocatoreId: number; testo: string; precedente: Acquisto | null } | null>(
-    null,
-  );
+  const [annulla, setAnnulla] = useState<{
+    giocatoreId: number;
+    testo: string;
+    precedente: Acquisto | null;
+    alternative: Giocatore[];
+  } | null>(null);
   const timerAnnullaRef = useRef<number | undefined>(undefined);
   const [daLiberare, setDaLiberare] = useState<number | null>(null);
   const [completi, setCompleti] = useState<Map<number, GiocatoreRaw>>(new Map());
@@ -234,7 +238,29 @@ export function GiocatoriListPage({ vista }: Props) {
     }
   }, []);
 
-  /** Azioni dalla scheda dettaglio: salvano e offrono per qualche secondo "Annulla". */
+  /**
+   * Fino a 3 giocatori ancora liberi con lo stesso ruolo: prima i preferiti, poi per FVM piu' vicino.
+   * In Mantra basta condividere almeno un ruolo.
+   */
+  function trovaAlternative(giocatoreId: number): Giocatore[] {
+    const preso = giocatori.find((g) => g.id === giocatoreId);
+    if (!preso) return [];
+    const stessoRuolo = (g: Giocatore) =>
+      modalita === "CLASSICO" ? g.ruolo[0] === preso.ruolo[0] : g.ruolo.some((r) => preso.ruolo.includes(r));
+    return giocatori
+      .filter((g) => g.id !== giocatoreId && !acquisti[g.id] && stessoRuolo(g))
+      .sort(
+        (a, b) =>
+          Number(preferiti.has(b.id)) - Number(preferiti.has(a.id)) ||
+          Math.abs(a.fantaValoreMedio - preso.fantaValoreMedio) - Math.abs(b.fantaValoreMedio - preso.fantaValoreMedio),
+      )
+      .slice(0, 3);
+  }
+
+  /**
+   * Azioni dalla scheda dettaglio: salvano e offrono "Annulla". Se il giocatore va a un altro
+   * mostra anche le alternative, e in quel caso l'avviso resta finche' non lo chiudi.
+   */
   function handleAcquistoConAnnulla(giocatoreId: number, acquisto: Acquisto | null) {
     const nome = completi.get(giocatoreId)?.nome ?? "Giocatore";
     const testo =
@@ -243,9 +269,12 @@ export function GiocatoriListPage({ vista }: Props) {
         : acquisto.stato === "MIO"
           ? `${nome} tuo a ${acquisto.prezzo}`
           : `${nome} preso da altri`;
-    setAnnulla({ giocatoreId, testo, precedente: acquisti[giocatoreId] ?? null });
+    const alternative = acquisto?.stato === "ALTRI" ? trovaAlternative(giocatoreId) : [];
+    setAnnulla({ giocatoreId, testo, precedente: acquisti[giocatoreId] ?? null, alternative });
     window.clearTimeout(timerAnnullaRef.current);
-    timerAnnullaRef.current = window.setTimeout(() => setAnnulla(null), DURATA_ANNULLA_MS);
+    if (alternative.length === 0) {
+      timerAnnullaRef.current = window.setTimeout(() => setAnnulla(null), DURATA_ANNULLA_MS);
+    }
     handleSalvaAcquisto(giocatoreId, acquisto);
   }
 
@@ -448,6 +477,14 @@ export function GiocatoriListPage({ vista }: Props) {
             {filtriAttivi > 0 && <span className="badge">{filtriAttivi}</span>}
           </button>
         </div>
+        <div className="ruoli-rapidi">
+          <RuoloSelector
+            modalita={modalita}
+            ruoli={ruoli}
+            onRuoloToggle={handleRuoloToggle}
+            onReset={() => setRuoli([])}
+          />
+        </div>
         <button type="button" className="riepilogo" onClick={() => setFiltriAperti(true)}>
           <strong>{giocatoriOrdinati.length}</strong> · {riepilogo.join(" · ")}
         </button>
@@ -580,10 +617,57 @@ export function GiocatoriListPage({ vista }: Props) {
       )}
       {annulla && (
         <div className="toast" role="status">
-          <span className="toast-testo">{annulla.testo}</span>
-          <button type="button" className="toast-btn" onClick={handleAnnulla}>
-            Annulla
-          </button>
+          <div className="toast-riga">
+            <span className="toast-testo">{annulla.testo}</span>
+            <button type="button" className="toast-btn" onClick={handleAnnulla}>
+              Annulla
+            </button>
+            {annulla.alternative.length > 0 && (
+              <button type="button" className="toast-chiudi" aria-label="Chiudi" onClick={() => setAnnulla(null)}>
+                ✕
+              </button>
+            )}
+          </div>
+          {annulla.alternative.length > 0 && (
+            <>
+              <div className="alternative-titolo">Alternative libere</div>
+              <ul className="alternative">
+                {annulla.alternative.map((g) => (
+                  <li key={g.id}>
+                    <button
+                      type="button"
+                      className="alternativa"
+                      onClick={() => {
+                        setAnnulla(null);
+                        handleApriDettaglio(g.id);
+                      }}
+                    >
+                      <span className="ruolo-badges">
+                        {g.ruolo.map((r) => (
+                          <span key={r} className="ruolo-badge" data-colore={coloreRuolo(r)}>
+                            {r}
+                          </span>
+                        ))}
+                      </span>
+                      <span className="alternativa-nome">
+                        {preferiti.has(g.id) && "★ "}
+                        {g.nome}
+                      </span>
+                      <span className="alternativa-valori">
+                        FVM <strong>{g.fantaValoreMedio}</strong>
+                        {g.spesaMassima != null && (
+                          <>
+                            {" "}
+                            · max <strong>{g.spesaMassima}</strong>
+                          </>
+                        )}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       )}
 
