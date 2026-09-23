@@ -1,0 +1,527 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.container {
+  margin: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.nav-preferiti {
+  margin-bottom: 0.75rem;
+}
+
+.nav-preferiti .toggle {
+  display: inline-block;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.azione-preferito-btn {
+  width: 1.7em;
+  height: 1.7em;
+  border: none;
+  border-radius: 4px;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.azione-preferito-btn.aggiungi {
+  background-color: #2fa76f;
+}
+.azione-preferito-btn.aggiungi:hover {
+  background-color: #268a5c;
+}
+
+.azione-preferito-btn.rimuovi {
+  background-color: #e05260;
+}
+.azione-preferito-btn.rimuovi:hover {
+  background-color: #c8404e;
+}
+
+.semaforo-dot {
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: none;
+  border: 2px solid #999999;
+  background-color: transparent;
+}
+
+.semaforo-dot[data-colore="verde"] {
+  background-color: #2fa76f;
+  border-color: #2fa76f;
+}
+.semaforo-dot[data-colore="giallo"] {
+  background-color: #f5c542;
+  border-color: #f5c542;
+}
+.semaforo-dot[data-colore="rosso"] {
+  background-color: #e05260;
+  border-color: #e05260;
+}
+
+.spesa-massima-input {
+  width: 4.5em;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid #cccccc;
+  padding: 0.4em 0.5em;
+  font-size: 1.05em;
+  font-family: inherit;
+  color: #0f0f0f;
+  background-color: #ffffff;
+}
+
+.filtri-toggle {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #0f0f0f;
+  padding: 0.4em 1em;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.filtri-toggle:hover {
+  border-color: #396cd8;
+  color: #396cd8;
+}
+
+.filtri-bar {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-group {
+  display: inline-flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #cccccc;
+}
+
+.toggle {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #ffffff;
+  color: #0f0f0f;
+}
+
+.toggle + .toggle {
+  border-left: 1px solid #cccccc;
+}
+
+.toggle.active {
+  background-color: #396cd8;
+  color: #ffffff;
+}
+
+.ruolo-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  max-width: 700px;
+}
+
+.ruolo-selector .toggle {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+
+.ruolo-toggle {
+  border-width: 2px !important;
+}
+
+.ruolo-toggle[data-colore="giallo"] {
+  border-color: #f5c542;
+}
+.ruolo-toggle[data-colore="giallo"].active {
+  background-color: #f5c542;
+  color: #3a2e00;
+}
+
+.ruolo-toggle[data-colore="viola"] {
+  border-color: #8e44ad;
+}
+.ruolo-toggle[data-colore="viola"].active {
+  background-color: #8e44ad;
+  color: #ffffff;
+}
+
+.ruolo-toggle[data-colore="rosso"] {
+  border-color: #e05260;
+}
+.ruolo-toggle[data-colore="rosso"].active {
+  background-color: #e05260;
+  color: #ffffff;
+}
+
+.ruolo-toggle[data-colore="blu"] {
+  border-color: #396cd8;
+}
+.ruolo-toggle[data-colore="blu"].active {
+  background-color: #396cd8;
+  color: #ffffff;
+}
+
+.ruolo-toggle[data-colore="verde"] {
+  border-color: #2fa76f;
+}
+.ruolo-toggle[data-colore="verde"].active {
+  background-color: #2fa76f;
+  color: #ffffff;
+}
+
+.ruolo-badges {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.ruolo-badge {
+  display: inline-block;
+  padding: 0.15em 0.5em;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ruolo-badge[data-colore="giallo"] {
+  background-color: #f5c542;
+  color: #3a2e00;
+}
+.ruolo-badge[data-colore="viola"] {
+  background-color: #8e44ad;
+}
+.ruolo-badge[data-colore="rosso"] {
+  background-color: #e05260;
+}
+.ruolo-badge[data-colore="blu"] {
+  background-color: #396cd8;
+}
+.ruolo-badge[data-colore="verde"] {
+  background-color: #2fa76f;
+}
+
+.ricerca-input,
+.squadra-select {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 1px solid #cccccc;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  font-family: inherit;
+  color: #0f0f0f;
+  background-color: #ffffff;
+}
+
+.ricerca-input {
+  margin-bottom: 1.5rem;
+}
+
+.squadra-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.squadra-row .toggle {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background-color: #f6f6f6;
+  color: #0f0f0f;
+  border-radius: 12px;
+  padding: 1rem;
+  width: min(95vw, 1400px);
+  height: min(92vh, 1000px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+.modal-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.modal-zoom-controls button {
+  padding: 0.3em 0.8em;
+}
+
+.modal-zoom-controls span {
+  min-width: 3.5em;
+  text-align: center;
+}
+
+.modal-close {
+  border: none;
+  background: none;
+  box-shadow: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.2em 0.5em;
+  cursor: pointer;
+}
+
+.modal-image-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.modal-image {
+  user-select: none;
+  touch-action: none;
+}
+
+.giocatori-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.giocatori-table th.sortable:hover {
+  color: #396cd8;
+}
+
+.errore {
+  color: #d8395c;
+  font-weight: 500;
+}
+
+.giocatori-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.giocatori-table th,
+.giocatori-table td {
+  padding: 0.5em 1em;
+  text-align: center;
+  border-bottom: 1px solid #dddddd;
+}
+
+.giocatori-table th {
+  font-weight: 600;
+}
+
+.paginazione {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pagina-btn {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #0f0f0f;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pagina-btn:hover:not(:disabled) {
+  border-color: #396cd8;
+  color: #396cd8;
+}
+
+.pagina-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagina-indicatore {
+  font-weight: 500;
+  min-width: 8em;
+  text-align: center;
+}
+
+/*
+ * Dark mode: pilotata da JS (vedi src/useTema.ts), non dalla media query
+ * @media (prefers-color-scheme). Nel webview Tauri impacchettato la media
+ * query non segue in modo affidabile il tema di sistema su tutte le
+ * piattaforme, mentre l'API Tauri window.theme()/onThemeChanged() sì.
+ * useTema() applica/rimuove la classe "dark" su <html>.
+ */
+html.dark {
+  color: #f6f6f6;
+  background-color: #2f2f2f;
+}
+
+html.dark .nav-preferiti .toggle {
+  border-color: #555555;
+}
+
+html.dark .filtri-toggle {
+  border-color: #555555;
+  background-color: #0f0f0f98;
+  color: #ffffff;
+}
+
+html.dark .filtri-toggle:hover {
+  border-color: #24c8db;
+  color: #24c8db;
+}
+
+html.dark .toggle-group {
+  border-color: #555555;
+}
+
+html.dark .toggle {
+  background-color: #0f0f0f98;
+  color: #ffffff;
+}
+
+html.dark .toggle + .toggle {
+  border-left-color: #555555;
+}
+
+html.dark .toggle.active {
+  background-color: #396cd8;
+}
+
+html.dark .ruolo-selector .toggle {
+  border-color: #555555;
+}
+
+html.dark .ricerca-input,
+html.dark .squadra-select,
+html.dark .spesa-massima-input {
+  border-color: #555555;
+  color: #ffffff;
+  background-color: #0f0f0f98;
+}
+
+html.dark .squadra-row .toggle {
+  border-color: #555555;
+}
+
+html.dark .modal-content {
+  background-color: #2f2f2f;
+  color: #f6f6f6;
+}
+
+html.dark .modal-image-wrapper {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+html.dark .giocatori-table th.sortable:hover {
+  color: #24c8db;
+}
+
+html.dark .giocatori-table th,
+html.dark .giocatori-table td {
+  border-bottom-color: #444444;
+}
+
+html.dark .pagina-btn {
+  border-color: #555555;
+  background-color: #0f0f0f98;
+  color: #ffffff;
+}
+
+html.dark .semaforo-dot[data-colore="vuoto"] {
+  border-color: #777777;
+}
+
+html.dark .pagina-btn:hover:not(:disabled) {
+  border-color: #24c8db;
+  color: #24c8db;
+}
+
+.backup-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.backup-row .toggle {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+
+html.dark .backup-row .toggle {
+  border-color: #555555;
+}
