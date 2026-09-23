@@ -1,3 +1,7 @@
+/** Ordine dei ruoli (dalla porta all'attacco): usato dal selettore e dall'ordinamento per ruolo. */
+export const RUOLI_CLASSICO = ["P", "D", "C", "A"];
+export const RUOLI_MANTRA = ["Por", "Dc", "Dd", "Ds", "B", "E", "M", "C", "W", "T", "A", "Pc"];
+
 export type ColoreRuolo = "giallo" | "viola" | "rosso" | "blu" | "verde";
 
 // Mappatura stile fantacalcio.it/quotazioni-fantacalcio: portiere giallo,

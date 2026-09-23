@@ -1,6 +1,6 @@
 export type Modalita = "CLASSICO" | "MANTRA";
 export type Base = "CINQUECENTO" | "MILLE";
-export type CampoOrdinamento = "nome" | "squadra" | "quotazioneAsta" | "fantaValoreMedio";
+export type CampoOrdinamento = "nome" | "squadra" | "ruolo" | "quotazioneAsta" | "fantaValoreMedio";
 export type Direzione = "asc" | "desc";
 export type Priorita = "VERDE" | "GIALLO" | "ROSSO";
 

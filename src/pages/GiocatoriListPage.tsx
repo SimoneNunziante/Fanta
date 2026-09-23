@@ -19,12 +19,29 @@ import { calcolaRiepilogo } from "../asta";
 import { CONFIG_ASTA_DEFAULT, type GiocatoreRaw } from "../store";
 import { formazioneUrl } from "../formazioni";
 import { fetchPreferiti, aggiungiPreferito, rimuoviPreferito } from "../preferiti";
+import { RUOLI_CLASSICO, RUOLI_MANTRA } from "../ruoloColori";
 import type { Acquisto, Base, CampoOrdinamento, ConfigAsta, Direzione, Giocatore, Modalita, Priorita } from "../types";
 import "../App.css";
+
+const ORDINE_RUOLI: Record<string, number> = Object.fromEntries(
+  [...RUOLI_CLASSICO, ...RUOLI_MANTRA].map((r, i) => [r, i]),
+);
+
+function confrontaNome(a: Giocatore, b: Giocatore): number {
+  return a.nome.localeCompare(b.nome, "it", { sensitivity: "base" });
+}
+
+/** Posizione del ruolo principale. "C" e "A" sono in entrambe le liste: vale l'indice Mantra, che mantiene comunque l'ordine P < D < C < A del Classico. */
+function indiceRuolo(g: Giocatore): number {
+  return ORDINE_RUOLI[g.ruolo[0]] ?? 99;
+}
 
 function confronta(a: Giocatore, b: Giocatore, campo: CampoOrdinamento): number {
   if (campo === "nome" || campo === "squadra") {
     return a[campo].localeCompare(b[campo], "it", { sensitivity: "base" });
+  }
+  if (campo === "ruolo") {
+    return indiceRuolo(a) - indiceRuolo(b) || confrontaNome(a, b);
   }
   return a[campo] - b[campo];
 }
@@ -73,6 +90,7 @@ const BLOCCO_CARD = 40;
 const ETICHETTE_ORDINAMENTO: Record<CampoOrdinamento, string> = {
   nome: "Nome",
   squadra: "Squadra",
+  ruolo: "Ruolo",
   quotazioneAsta: "Quot.",
   fantaValoreMedio: "FVM",
 };

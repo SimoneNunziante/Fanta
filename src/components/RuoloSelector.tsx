@@ -1,4 +1,4 @@
-import { coloreRuolo } from "../ruoloColori";
+import { coloreRuolo, RUOLI_CLASSICO, RUOLI_MANTRA } from "../ruoloColori";
 import type { Modalita } from "../types";
 
 interface Props {
@@ -8,8 +8,6 @@ interface Props {
   onReset: () => void;
 }
 
-const RUOLI_CLASSICO = ["P", "D", "C", "A"];
-const RUOLI_MANTRA = ["Por", "Dc", "Dd", "Ds", "B", "E", "M", "C", "W", "T", "A", "Pc"];
 
 export function RuoloSelector({ modalita, ruoli, onRuoloToggle, onReset }: Props) {
   const opzioni = modalita === "CLASSICO" ? RUOLI_CLASSICO : RUOLI_MANTRA;

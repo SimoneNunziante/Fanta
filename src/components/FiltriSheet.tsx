@@ -31,6 +31,7 @@ interface Props {
 const CAMPI_ORDINAMENTO: { value: CampoOrdinamento; label: string }[] = [
   { value: "nome", label: "Nome" },
   { value: "squadra", label: "Squadra" },
+  { value: "ruolo", label: "Ruolo" },
   { value: "quotazioneAsta", label: "Quotazione" },
   { value: "fantaValoreMedio", label: "Fantavalore medio" },
 ];
