@@ -218,7 +218,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
             <input
               type="search"
               className="ricerca-input"
-              placeholder={soloPreferiti ? "Cerca nei preferiti…" : "Cerca giocatore…"}
+              placeholder={soloPreferiti ? "Cerca preferiti…" : "Cerca…"}
               value={ricerca}
               onChange={(e) => setRicerca(e.currentTarget.value)}
               enterKeyHint="search"
@@ -235,7 +235,7 @@ export function GiocatoriListPage({ soloPreferiti = false }: Props) {
             aria-label="Apri filtri"
             onClick={() => setFiltriAperti(true)}
           >
-            ⚙︎ Filtri
+            <span aria-hidden="true">⚙︎</span>
             {filtriAttivi > 0 && <span className="badge">{filtriAttivi}</span>}
           </button>
         </div>

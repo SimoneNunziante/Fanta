@@ -31,14 +31,16 @@ export const GiocatoreCard = memo(function GiocatoreCard({
       <div className="card-riga">
         <div className="card-nome">
           <span className="nome-giocatore">{g.nome}</span>
-          <span className="card-squadra">{g.squadra}</span>
-        </div>
-        <div className="ruolo-badges">
-          {g.ruolo.map((r) => (
-            <span key={r} className="ruolo-badge" data-colore={coloreRuolo(r)}>
-              {r}
-            </span>
-          ))}
+          <div className="card-sottotitolo">
+            <div className="ruolo-badges">
+              {g.ruolo.map((r) => (
+                <span key={r} className="ruolo-badge" data-colore={coloreRuolo(r)}>
+                  {r}
+                </span>
+              ))}
+            </div>
+            <span className="card-squadra">{g.squadra}</span>
+          </div>
         </div>
         <button
           type="button"

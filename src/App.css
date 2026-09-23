@@ -17,10 +17,10 @@
   --viola: #8e44ad;
   --blu: #396cd8;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  --tabbar-h: 72px;
+  --tabbar-h: 90px;
 
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 19px;
+  font-size: 24px;
   line-height: 1.4;
   color: var(--text);
   background-color: var(--bg);
@@ -80,14 +80,14 @@ button {
   position: sticky;
   top: 0;
   z-index: 20;
-  padding: calc(env(safe-area-inset-top) + 12px) 14px 10px;
+  padding: calc(env(safe-area-inset-top) + 12px) 12px 10px;
   background-color: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
 .topbar-riga {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ricerca {
@@ -97,12 +97,12 @@ button {
 
 .ricerca-input {
   width: 100%;
-  height: 53px;
-  padding: 0 48px 0 17px;
+  height: 66px;
+  padding: 0 60px 0 21px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 18px;
   background-color: var(--surface);
-  font-size: 19px; /* >= 16px: evita lo zoom automatico su mobile */
+  font-size: 24px; /* >= 16px: evita lo zoom automatico su mobile */
   outline: none;
   -webkit-appearance: none;
   appearance: none;
@@ -118,10 +118,10 @@ button {
 
 .ricerca-clear {
   position: absolute;
-  right: 5px;
-  top: 5px;
-  width: 43px;
-  height: 43px;
+  right: 6px;
+  top: 6px;
+  width: 54px;
+  height: 54px;
   border: none;
   border-radius: 50%;
   background: none;
@@ -130,10 +130,13 @@ button {
 
 .filtri-btn {
   position: relative;
-  height: 53px;
-  padding: 0 17px;
+  flex: none;
+  width: 66px;
+  height: 66px;
+  padding: 0;
+  font-size: 30px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 18px;
   background-color: var(--surface);
   font-weight: 600;
   white-space: nowrap;
@@ -143,25 +146,25 @@ button {
   position: absolute;
   top: -6px;
   right: -6px;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 7px;
-  border-radius: 12px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 9px;
+  border-radius: 15px;
   background-color: var(--primary);
   color: var(--primary-text);
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 18px;
+  line-height: 30px;
 }
 
 .riepilogo {
   display: block;
   width: 100%;
-  margin-top: 7px;
+  margin-top: 9px;
   padding: 2px;
   border: none;
   background: none;
   color: var(--text-2);
-  font-size: 16px;
+  font-size: 20px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -173,7 +176,7 @@ button {
 }
 
 .lista-contenitore {
-  padding: 12px 14px calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 19px);
+  padding: 12px 10px calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 24px);
 }
 
 .lista {
@@ -182,23 +185,23 @@ button {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 
 .sentinella {
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 .vuoto {
-  margin: 58px 19px;
+  margin: 72px 24px;
   text-align: center;
   color: var(--text-2);
 }
 
 .errore {
-  margin: 10px 0;
-  padding: 12px 14px;
-  border-radius: 12px;
+  margin: 12px 0;
+  padding: 15px 18px;
+  border-radius: 15px;
   background-color: color-mix(in srgb, var(--danger) 12%, transparent);
   color: var(--danger);
   font-weight: 500;
@@ -206,10 +209,10 @@ button {
 
 /* ---------- Card giocatore ---------- */
 .card {
-  padding: 18px 16px 16px;
+  padding: 18px 16px 16px 16px;
   border: 1px solid var(--border);
-  border-left-width: 7px;
-  border-radius: 19px;
+  border-left-width: 9px;
+  border-radius: 24px;
   background-color: var(--surface);
   box-shadow: var(--shadow);
 }
@@ -226,8 +229,8 @@ button {
 
 .card-riga {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 15px;
 }
 
 .card-nome {
@@ -238,28 +241,34 @@ button {
 }
 
 .nome-giocatore {
-  font-size: 25px;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.card-sottotitolo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .card-squadra {
-  margin-top: 2px;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--text-2);
 }
 
 .stella {
   flex: none;
-  width: 62px;
-  height: 62px;
-  margin: -8px -10px -8px 0;
+  width: 64px;
+  height: 64px;
+  margin: -10px -8px 0 0;
   border: none;
   border-radius: 50%;
   background: none;
-  font-size: 38px;
+  font-size: 42px;
   line-height: 1;
   color: var(--text-2);
 }
@@ -274,21 +283,21 @@ button {
 
 .card-valori {
   display: flex;
-  gap: 29px;
-  margin-top: 12px;
+  gap: 36px;
+  margin-top: 15px;
   font-variant-numeric: tabular-nums;
 }
 
 .card-valori small,
 .card-spesa small {
   color: var(--text-2);
-  font-size: 17px;
+  font-size: 21px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
 .card-valori strong {
-  font-size: 24px;
+  font-size: 30px;
 }
 
 .card-asta {
@@ -296,26 +305,26 @@ button {
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 10px;
-  margin-top: 17px;
-  padding-top: 17px;
+  gap: 12px;
+  margin-top: 21px;
+  padding-top: 21px;
   border-top: 1px solid var(--border);
 }
 
 .card-spesa {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .spesa-massima-input {
-  width: 80px;
-  height: 58px;
+  width: 100px;
+  height: 72px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 18px;
   background-color: var(--surface-2);
   text-align: center;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   outline: none;
@@ -331,8 +340,8 @@ button {
 }
 
 .priorita-dot {
-  width: 46px;
-  height: 46px;
+  width: 58px;
+  height: 58px;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -343,8 +352,8 @@ button {
 
 .priorita-dot::after {
   content: "";
-  width: 36px;
-  height: 36px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   border: 3px solid var(--c);
   opacity: 0.45;
@@ -371,14 +380,14 @@ button {
 .ruolo-badges {
   flex: none;
   display: flex;
-  gap: 5px;
+  gap: 6px;
 }
 
 .ruolo-badge {
-  min-width: 38px;
-  padding: 5px 10px;
-  border-radius: 10px;
-  font-size: 18px;
+  min-width: 48px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 22px;
   font-weight: 700;
   text-align: center;
   color: #ffffff;
@@ -425,13 +434,13 @@ button {
   justify-content: center;
   gap: 2px;
   color: var(--text-2);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
   text-decoration: none;
 }
 
 .tab-icona {
-  font-size: 24px;
+  font-size: 30px;
   line-height: 1;
 }
 
@@ -441,10 +450,10 @@ button {
 
 /* ---------- Pulsanti e controlli ---------- */
 .btn {
-  height: 53px;
-  padding: 0 19px;
+  height: 66px;
+  padding: 0 24px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 18px;
   background-color: var(--surface-2);
   font-weight: 600;
   white-space: nowrap;
@@ -461,9 +470,9 @@ button {
 }
 
 .link-btn {
-  min-width: 77px;
-  height: 53px;
-  padding: 0 5px;
+  min-width: 96px;
+  height: 66px;
+  padding: 0 6px;
   border: none;
   background: none;
   color: var(--primary);
@@ -479,15 +488,15 @@ button {
 .toggle-group {
   display: inline-flex;
   padding: 3px;
-  border-radius: 14px;
+  border-radius: 18px;
   background-color: var(--surface-2);
 }
 
 .toggle {
-  min-height: 48px;
-  padding: 0 19px;
+  min-height: 60px;
+  padding: 0 24px;
   border: none;
-  border-radius: 11px;
+  border-radius: 14px;
   background: none;
   font-weight: 600;
   color: var(--text-2);
@@ -502,12 +511,12 @@ button {
 .squadra-select {
   flex: 1;
   min-width: 0;
-  height: 53px;
-  padding: 0 14px;
+  height: 66px;
+  padding: 0 18px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 18px;
   background-color: var(--surface-2);
-  font-size: 19px;
+  font-size: 24px;
 }
 
 /* ---------- Pannello filtri (bottom sheet) ---------- */
@@ -528,7 +537,7 @@ button {
   max-height: 88dvh;
   display: flex;
   flex-direction: column;
-  border-radius: 22px 22px 0 0;
+  border-radius: 28px 28px 0 0;
   background-color: var(--surface);
   animation: sali 0.2s ease-out;
 }
@@ -537,55 +546,55 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 14px;
+  padding: 9px 18px;
   border-bottom: 1px solid var(--border);
 }
 
 .sheet-header h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 25px;
 }
 
 .sheet-body {
   flex: 1;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 5px 19px 19px;
+  padding: 6px 24px 24px;
 }
 
 .sheet-body section {
-  padding: 14px 0;
+  padding: 18px 0;
 }
 
 .sheet-body h3 {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: var(--text-2);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .sheet-footer {
-  padding: 12px 19px calc(env(safe-area-inset-bottom) + 12px);
+  padding: 15px 24px calc(env(safe-area-inset-bottom) + 15px);
   border-top: 1px solid var(--border);
 }
 
 .filtri-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ruolo-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ruolo-selector .toggle {
-  min-width: 58px;
-  padding: 0 14px;
+  min-width: 72px;
+  padding: 0 18px;
   border: 2px solid var(--border);
   background-color: var(--surface-2);
   color: var(--text);
@@ -635,11 +644,11 @@ button {
 .backup-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ordina-row .squadra-select {
-  min-width: 180px;
+  min-width: 225px;
 }
 
 .backup-row .errore {
@@ -672,10 +681,10 @@ button {
 .modal-content {
   width: min(100vw, 1400px);
   height: min(100dvh, 1000px);
-  padding: calc(env(safe-area-inset-top) + 10px) 14px 14px;
+  padding: calc(env(safe-area-inset-top) + 12px) 18px 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   background-color: var(--surface);
   color: var(--text);
 }
@@ -684,7 +693,7 @@ button {
   .modal-content {
     width: min(95vw, 1400px);
     height: min(92vh, 1000px);
-    border-radius: 14px;
+    border-radius: 18px;
   }
 }
 
@@ -692,26 +701,26 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 28px;
 }
 
 .modal-zoom-controls {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
   font-variant-numeric: tabular-nums;
 }
 
 .modal-zoom-controls button {
-  min-width: 48px;
-  height: 48px;
+  min-width: 60px;
+  height: 60px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 15px;
   background-color: var(--surface-2);
 }
 
@@ -721,11 +730,11 @@ button {
 }
 
 .modal-close {
-  width: 53px;
-  height: 53px;
+  width: 66px;
+  height: 66px;
   border: none;
   background: none;
-  font-size: 29px;
+  font-size: 36px;
   line-height: 1;
 }
 
@@ -736,7 +745,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: var(--surface-2);
 }
 
