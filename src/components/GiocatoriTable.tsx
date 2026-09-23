@@ -28,31 +28,43 @@ export function GiocatoriTable({
   onSalvaSpesaMassima,
   onSalvaPriorita,
 }: Props) {
-  function renderHeader(campo: CampoOrdinamento, label: string) {
+  function renderHeader(campo: CampoOrdinamento, label: string, labelCorta = label, className = "") {
     const attivo = campo === sortCampo;
     return (
       <th
-        className="sortable"
+        className={`sortable ${className}`.trim()}
         aria-sort={attivo ? (direzione === "asc" ? "ascending" : "descending") : "none"}
         onClick={() => onSortChange(campo)}
       >
-        {label}
+        <span className="label-lunga">{label}</span>
+        <span className="label-corta">{labelCorta}</span>
         {attivo && (direzione === "asc" ? " ▲" : " ▼")}
       </th>
     );
   }
 
   return (
+    <div className="tabella-wrapper">
     <table className="giocatori-table">
       <thead>
         <tr>
-          {renderHeader("nome", "Nome")}
-          {renderHeader("squadra", "Squadra")}
+          {renderHeader("nome", "Nome", "Nome", "col-nome")}
+          {renderHeader("squadra", "Squadra", "Squadra", "col-squadra")}
           <th>Ruolo</th>
-          {renderHeader("quotazioneAsta", "Quotazione Asta")}
-          {renderHeader("fantaValoreMedio", "Fantavalore Medio")}
-          {soloPreferiti && <th>Spesa massima</th>}
-          {soloPreferiti && <th>Priorità</th>}
+          {renderHeader("quotazioneAsta", "Quotazione Asta", "Quot.")}
+          {renderHeader("fantaValoreMedio", "Fantavalore Medio", "FVM")}
+          {soloPreferiti && (
+            <th>
+              <span className="label-lunga">Spesa massima</span>
+              <span className="label-corta">Max</span>
+            </th>
+          )}
+          {soloPreferiti && (
+            <th>
+              <span className="label-lunga">Priorità</span>
+              <span className="label-corta">Prio</span>
+            </th>
+          )}
           <th aria-label="Preferito" />
         </tr>
       </thead>
@@ -61,8 +73,11 @@ export function GiocatoriTable({
           const preferito = preferiti.has(g.id);
           return (
           <tr key={g.id}>
-            <td>{g.nome}</td>
-            <td>{g.squadra}</td>
+            <td className="col-nome">
+              <span className="nome-giocatore">{g.nome}</span>
+              <span className="squadra-mobile">{g.squadra}</span>
+            </td>
+            <td className="col-squadra">{g.squadra}</td>
             <td>
               <div className="ruolo-badges">
                 {g.ruolo.map((r) => (
@@ -105,5 +120,6 @@ export function GiocatoriTable({
         })}
       </tbody>
     </table>
+    </div>
   );
 }

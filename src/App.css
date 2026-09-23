@@ -525,3 +525,143 @@ html.dark .pagina-btn:hover:not(:disabled) {
 html.dark .backup-row .toggle {
   border-color: #555555;
 }
+
+/* ---------- Tabella: scroll orizzontale e colonna nome fissa ---------- */
+.tabella-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.giocatori-table .col-nome {
+  text-align: left;
+}
+
+.nome-giocatore {
+  display: block;
+  font-weight: 500;
+}
+
+.squadra-mobile,
+.label-corta {
+  display: none;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 700px) {
+  .container {
+    padding: 0.75rem 0.5rem;
+  }
+
+  h1 {
+    margin: 0.25rem 0 0.75rem;
+  }
+
+  .filtri-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .toggle {
+    padding: 0.45em 0.9em;
+  }
+
+  .ruolo-selector,
+  .squadra-row,
+  .ricerca-input {
+    margin-bottom: 1rem;
+  }
+
+  .squadra-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .label-lunga,
+  .giocatori-table .col-squadra {
+    display: none;
+  }
+
+  .label-corta {
+    display: inline;
+  }
+
+  .squadra-mobile {
+    display: block;
+    font-size: 0.8em;
+    line-height: 1.2;
+    opacity: 0.7;
+  }
+
+  .giocatori-table {
+    font-size: 0.85em;
+  }
+
+  .giocatori-table th,
+  .giocatori-table td {
+    padding: 0.45em 0.25em;
+  }
+
+  .giocatori-table .azione-preferito-btn {
+    width: 1.6em;
+    height: 1.6em;
+  }
+
+  .giocatori-table th {
+    white-space: nowrap;
+  }
+
+  .giocatori-table .col-nome {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 6.5em;
+    max-width: 9em;
+    padding-left: 0.4em;
+    background-color: #f6f6f6;
+    word-break: break-word;
+  }
+
+  html.dark .giocatori-table .col-nome {
+    background-color: #2f2f2f;
+  }
+
+  .ruolo-badges {
+    flex-wrap: wrap;
+  }
+
+  .ruolo-badge {
+    padding: 0.1em 0.35em;
+    font-size: 0.8em;
+  }
+
+  .spesa-massima-input {
+    width: 2.8em;
+    padding: 0.3em 0.1em;
+    font-size: 1em;
+  }
+
+  .paginazione {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagina-btn {
+    padding: 0.45em 0.8em;
+  }
+
+  .pagina-indicatore {
+    min-width: auto;
+  }
+
+  .modal-content {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+}
