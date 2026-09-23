@@ -9,7 +9,7 @@ React 19 + TypeScript + Vite 7, react-router (HashRouter). Nessun backend. Packa
 - Dati utente: `preferiti`, `spesaMassima`, `priorita`, `acquisti` (MIO/ALTRI con prezzo) e `configAsta` (budget e slot Classico P/D/C/A, Mantra Por/Mov). `normalizzaDatiUtente` mette i default ai campi mancanti, così i backup vecchi restano validi.
 - `src/asta.ts`: residuo, slot per reparto e massimo spendibile (residuo meno 1 credito per ogni altro slot libero). Gli slot seguono la modalità attiva nei filtri.
 - `src/api.ts`, `src/preferiti.ts`: stessa firma delle vecchie chiamate REST, così i componenti non cambiano. La logica è portata da `GiocatoreService` e `PreferitoService`.
-- PWA: `public/manifest.webmanifest` e `public/sw.js` (stale-while-revalidate), registrato in `src/main.tsx` solo in produzione.
+- PWA: `public/manifest.webmanifest` e `public/sw.js`, registrato in `src/main.tsx` solo in produzione. Il service worker pre-carica pagina, asset e dati all'installazione. Gli `assets/*` (con hash) sono cache-first, tutto il resto è rete-prima con la cache come fallback offline. Quando subentra una versione nuova la pagina si ricarica da sola. Match con `ignoreVary`, perché gli script con `crossorigin` portano l'header Origin.
 
 ## Convenzioni
 Naming in italiano, come nel progetto originale. I path pubblici passano da `import.meta.env.BASE_URL`, perché l'app è servita sotto `/Fanta/`.
@@ -30,5 +30,5 @@ Naming in italiano, come nel progetto originale. I path pubblici passano da `imp
 
 ## Note
 - `vite.config.ts` → `base: "/Fanta/"` deve corrispondere al nome del repo GitHub.
-- Se cambi file statici in modo incompatibile, incrementa `CACHE` in `public/sw.js`.
+- Se cambi la strategia del service worker, incrementa `CACHE` in `public/sw.js` (così le cache vecchie vengono cancellate).
 - Il repo usa la chiave personale `~/.ssh/id_ed25519_github` tramite `core.sshCommand` (config locale del repo: `~/.ssh/config` è di root e non va toccato) e un'identità git locale personale. Non usare le credenziali aziendali.
